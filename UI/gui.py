@@ -1,7 +1,9 @@
 from PyQt6 import uic, QtGui
-from PyQt6.QtWidgets import QMainWindow, QPushButton, QLineEdit, QFileDialog, QToolButton, QWidget, QVBoxLayout, QLabel
-from PyQt6.QtGui import QFontDatabase, QIcon, QPixmap
+from PyQt6.QtWidgets import QMainWindow, QPushButton, QLineEdit, QFileDialog, QToolButton, QWidget, QVBoxLayout, QLabel, \
+    QComboBox, QCheckBox
+from PyQt6.QtGui import QFontDatabase, QIcon, QPixmap, QImage
 from PyQt6.QtCore import Qt, QCoreApplication
+from PIL import Image
 
 import ctypes
 from ctypes.wintypes import DWORD, ULONG
@@ -39,7 +41,6 @@ class GUI(QMainWindow):
         app_icon = QIcon("UI/icons/app_icon.png")
         self.setWindowTitle("Automatic PBR Fixer for CS2 Weapon Finishes")
         self.setWindowIcon(app_icon)
-        self.set_background_image
 
 
     def blur_background(self):
@@ -86,28 +87,67 @@ class GUI(QMainWindow):
         self.setalbedo_button = self.findChild(QToolButton, 'setalbedoButton')
         self.setmetallic_button = self.findChild(QToolButton, 'setmetallicButton')
         self.clamp_button = self.findChild(QPushButton, 'clampButton')
+        self.validate_button = self.findChild(QPushButton, 'validateButton')
         self.albedoPath_input = self.findChild(QLineEdit, 'albedoPathInput')
         self.metallicPath_input = self.findChild(QLineEdit, 'metallicPathInput')
+        self.metallicPath_input = self.findChild(QLineEdit, 'metallicPathInput')
+        self.finishstyle_box = self.findChild(QComboBox, 'finishStyleBox')
+        self.is_saturation_box = self.findChild(QCheckBox, 'isSaturationBox')
+        self.is_compensating = self.findChild(QCheckBox, 'isAoBox')
 
         self.setalbedo_button.clicked.connect(self.set_albedomap)
         self.setmetallic_button.clicked.connect(self.set_metallicmap)
-        self.clamp_button.clicked.connect(self.fixPBR)
+        self.clamp_button.clicked.connect(self.correct_albedo)
+        self.validate_button.clicked.connect(self.validate_albedo)
 
     def set_albedomap(self):
+        self.albedoPath_input.setStyleSheet("border-color: #343434;")
         albedomap = QFileDialog.getOpenFileName(self, 'Open File', '/Users', 'Targa (*.tga);;PNG (*.png)')
         self.albedoPath_input.setText(albedomap[0])
         self.set_background_image(albedomap[0])
 
     def set_metallicmap(self):
+        self.metallicPath_input.setStyleSheet("border-color: #343434;")
         metallicmap = QFileDialog.getOpenFileName(self, 'Open File', '/Users', 'Targa (*.tga);;PNG (*.png)')
         self.metallicPath_input.setText(metallicmap[0])
 
-    def fixPBR(self):
+    def correct_albedo(self):
         albedomap = self.albedoPath_input.text()
         metallicmap = self.metallicPath_input.text()
         pbr_corrected = PBRMap(albedomap, metallicmap)
-        pbr_corrected.range_clamp()
+        pbr_corrected.nonmetallic_range_clamp()
         self.set_background_image(pbr_corrected.save())
+
+    def validate_albedo(self):
+        if self.finishstyle_box.currentText() == "Gunsmith":
+            if not(self.is_valid_image_path(self.albedoPath_input.text())):
+                self.albedoPath_input.setStyleSheet("border-color: #a03c3c;")
+
+            if not(self.is_valid_image_path(self.metallicPath_input.text())):
+                self.metallicPath_input.setStyleSheet("border-color: #a03c3c;")
+
+            elif self.is_valid_image_path(self.albedoPath_input.text()) and self.is_valid_image_path(self.metallicPath_input.text()):
+                albedomap = self.albedoPath_input.text()
+                metallicmap = self.metallicPath_input.text()
+                albedo_validated = PBRMap(albedomap, metallicmap)
+                albedo_validated.nonmetallic_range_validate()
+                self.set_background_image(albedo_validated.save())
+
+        if self.finishstyle_box.currentText() == "Patina":
+            pass
+
+        if self.finishstyle_box.currentText() == "Custom Paint Job":
+            pass
+
+    @staticmethod
+    def is_valid_image_path(image_path):
+        try:
+            with Image.open(image_path) as img:
+                return True
+        except (FileNotFoundError, IsADirectoryError):
+            return False
+        except:
+            return False
 
     def exit_app(self):
         QCoreApplication.quit()

@@ -8,6 +8,11 @@
 	background: #1D1D1D;
 }
 
+.stackedWidget {
+	border: 1px solid #343434;
+	background: rgb(24, 24, 24);
+}
+
 .backgroundPlane {
 	border: none;
 	background: rgba(255, 255, 255, 0.01);
@@ -64,24 +69,24 @@
 }
 
 .regularButton {
-	border-radius: 5px;
-	background: #404040;
-	color: #777;
+	border-radius: 5px;  
+	background: rgb(80, 80, 80);
+	color: #999999;
 	text-align: center;
 	font-family: 'Roboto';
-	font-size: 16px;
+	font-size: 14px;
 }
 
 .regularButton:hover {
 	background: #868686;
-	color: rgb(61, 61, 61);
+	color: rgb(77, 77, 77);
 }
 
 .mainButton {
 	border-radius: 5px;
-	border: 1px solid #728FBA;
-	background: #516E9A;
-	color: #A6BBDA;
+	border: 1px solid #265e8c;
+	background: #334f66;
+	color: #c9c9c9;
 	text-align: center;
 	font-family: Roboto;
 	font-size: 14px;
@@ -94,14 +99,50 @@
 	color: rgb(66, 70, 77);
 }
 
+.comboBox {
+	border-radius: 5px;
+    background: #404040;
+    color: rgb(201, 201, 201);
+    text-align: center;
+    font-family: 'Roboto';
+    font-size: 12px;
+    border: none;
+    background-color: transparent;
+}
+
+.comboBox QAbstractItemView {
+	border: None;
+	background-color: #1D1D1D;
+    color: rgb(201, 201, 201);
+}
+
 .textInput {
 	border-radius: 5px;
 	border: 1px solid #343434;
 	background: #151515;
 	color: #A4A4A4;
 	font-family: Roboto;
-	font-size: 16px;
+	font-size: 14px;
 	font-style: normal;
 	font-weight: 400;
 	line-height: 18px; /* 112.5% */
+}
+
+.checkBox {
+    color: #A4A4A4;
+    font-family: 'Roboto';
+    font-size: 14px;
+    border: none;
+}
+
+.line {
+    background: rgba(63, 63, 63, 0.123);
+}
+
+.spinBox {
+    border-radius: 5px;
+    background-color: #131313;
+    color: #A4A4A4;
+    font-family: Roboto;
+    font-size: 14px;
 }
