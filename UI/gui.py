@@ -1,7 +1,7 @@
 from PyQt6 import uic, QtGui
 from PyQt6.QtWidgets import QMainWindow, QPushButton, QLineEdit, QFileDialog, QToolButton, QWidget, QVBoxLayout, QLabel
 from PyQt6.QtGui import QFontDatabase, QIcon, QPixmap
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, QCoreApplication
 
 import ctypes
 from ctypes.wintypes import DWORD, ULONG
@@ -110,7 +110,7 @@ class GUI(QMainWindow):
         self.set_background_image(pbr_corrected.save())
 
     def exit_app(self):
-        app.quit()
+        QCoreApplication.quit()
 
     def min_app(self):
         self.showMinimized()
