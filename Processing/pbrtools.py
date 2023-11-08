@@ -24,7 +24,12 @@ class PBRMap:
         metallic_data = np.array(metallic)
 
         albedo_data[(albedo_data <= 0)] = 1
-        saturation_mask = (albedo_data.max(axis=2) // albedo_data.min(axis=2) < 2) & (metallic_data >= 128).any(axis=2)
+        max_albedo = albedo_data.max(axis=2)
+        saturation_mask = (
+                (max_albedo > 16) &
+                ((max_albedo - albedo_data.min(axis=2)) / max_albedo < 0.9) &
+                (metallic_data >= 128).any(axis=2)
+        )
         albedo_data = np.where(saturation_mask[..., None], np.clip(albedo_data, 180, 250), albedo_data)
         metallic_mask = (metallic_data < 128).any(axis=2)
         albedo_data = np.where(metallic_mask[..., None], np.clip(albedo_data, 55, 220), np.clip(albedo_data, 90, 250))
