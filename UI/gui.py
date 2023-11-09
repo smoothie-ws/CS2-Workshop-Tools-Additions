@@ -1,15 +1,17 @@
 from PyQt6 import uic, QtGui
 from PyQt6.QtWidgets import QMainWindow, QPushButton, QLineEdit, QFileDialog, QToolButton, QWidget, QVBoxLayout, QLabel, \
-    QComboBox, QCheckBox
+    QComboBox, QCheckBox, QSpinBox, QDoubleSpinBox, QStackedWidget
 from PyQt6.QtGui import QFontDatabase, QIcon, QPixmap, QImage
 from PyQt6.QtCore import Qt, QCoreApplication
+from superqt import QRangeSlider
+
 from PIL import Image
 
 import ctypes
 from ctypes.wintypes import DWORD, ULONG
 from ctypes import windll, c_bool, c_int, POINTER, Structure
 
-from Processing.pbrtools import PBRMap
+from Tools.PBR import PBRAlbedo
 
 class AccentPolicy(Structure):
     _fields_ = [
@@ -41,7 +43,10 @@ class GUI(QMainWindow):
         app_icon = QIcon("UI/icons/app_icon.png")
         self.setWindowTitle("Automatic PBR Fixer for CS2 Weapon Finishes")
         self.setWindowIcon(app_icon)
-
+        self.mode = "combined"
+        self.consider_hs = False
+        self.compensate = False
+        self.hs_definition = 0.70
 
     def blur_background(self):
         self.setWindowFlag(Qt.WindowType.FramelessWindowHint)
@@ -63,7 +68,8 @@ class GUI(QMainWindow):
             self.setStyleSheet(style.read())
             self.show()
             self.add_menu()
-            self.connect_buttons()
+            self.setup_widgets()
+
             self.background = self.findChild(QWidget, 'background')
             self.background_layout = QVBoxLayout(self.background)
             self.background_image_label = QLabel()
@@ -83,42 +89,62 @@ class GUI(QMainWindow):
         self.background_image_label.setPixmap(pixmap)
         self.background_layout.addWidget(self.background_image_label)
 
-    def connect_buttons(self):
+    def setup_widgets(self):
         self.setalbedo_button = self.findChild(QToolButton, 'setalbedoButton')
         self.setmetallic_button = self.findChild(QToolButton, 'setmetallicButton')
         self.clamp_button = self.findChild(QPushButton, 'clampButton')
         self.validate_button = self.findChild(QPushButton, 'validateButton')
+        self.validation_result_label = self.findChild(QLabel, 'validationResultLabel')
         self.albedoPath_input = self.findChild(QLineEdit, 'albedoPathInput')
         self.metallicPath_input = self.findChild(QLineEdit, 'metallicPathInput')
         self.metallicPath_input = self.findChild(QLineEdit, 'metallicPathInput')
         self.finishstyle_box = self.findChild(QComboBox, 'finishStyleBox')
         self.is_saturation_box = self.findChild(QCheckBox, 'isSaturationBox')
         self.is_compensating = self.findChild(QCheckBox, 'isAoBox')
+        self.saturation_limit_label = self.findChild(QLabel, 'saturationLabel')
+
+
+
+        self.ao_path_label = self.findChild(QLabel, 'aoPathLabel')
+        self.ao_path_input = self.findChild(QLineEdit, 'aoPathInput')
+        self.set_ao_button = self.findChild(QToolButton, 'setaoButton')
+        self.saturation_limit_box = self.findChild(QDoubleSpinBox, 'saturationValue')
+        self.mode_box = self.findChild(QComboBox, 'finishStyleBox')
+
+        self.saturation_limit_label.setStyleSheet("color: rgba(164, 164, 164, 0.418);")
+        self.saturation_limit_box.setStyleSheet("color: rgba(164, 164, 164, 0.418);")
+        self.ao_path_label.setStyleSheet("color: rgba(164, 164, 164, 0.418);")
+        self.set_ao_button.setStyleSheet("color: rgba(164, 164, 164, 0.418);")
+        self.ao_path_input.setStyleSheet("color: rgba(164, 164, 164, 0.418);")
 
         self.setalbedo_button.clicked.connect(self.set_albedomap)
         self.setmetallic_button.clicked.connect(self.set_metallicmap)
+        self.set_ao_button.clicked.connect(self.set_aomap)
         self.clamp_button.clicked.connect(self.correct_albedo)
         self.validate_button.clicked.connect(self.validate_albedo)
+        self.is_saturation_box.stateChanged.connect(self.hs_state_changed)
+        self.is_compensating.stateChanged.connect(self.ao_state_changed)
 
     def set_albedomap(self):
         self.albedoPath_input.setStyleSheet("border-color: #343434;")
         albedomap = QFileDialog.getOpenFileName(self, 'Open File', '/Users', 'Targa (*.tga);;PNG (*.png)')
         self.albedoPath_input.setText(albedomap[0])
         self.set_background_image(albedomap[0])
+        self.validation_result_label.setText("Albedo texture was loaded successfully")
 
     def set_metallicmap(self):
         self.metallicPath_input.setStyleSheet("border-color: #343434;")
         metallicmap = QFileDialog.getOpenFileName(self, 'Open File', '/Users', 'Targa (*.tga);;PNG (*.png)')
         self.metallicPath_input.setText(metallicmap[0])
+        self.validation_result_label.setText("Metallic texture was loaded successfully")
+
+    def set_aomap(self):
+        self.ao_path_input.setStyleSheet("border-color: #343434;")
+        aomap = QFileDialog.getOpenFileName(self, 'Open File', '/Users', 'Targa (*.tga);;PNG (*.png)')
+        self.ao_path_input.setText(aomap[0])
+        self.validation_result_label.setText("AO map was loaded successfully")
 
     def correct_albedo(self):
-        albedomap = self.albedoPath_input.text()
-        metallicmap = self.metallicPath_input.text()
-        pbr_corrected = PBRMap(albedomap, metallicmap)
-        pbr_corrected.nonmetallic_range_clamp()
-        self.set_background_image(pbr_corrected.save())
-
-    def validate_albedo(self):
         if self.finishstyle_box.currentText() == "Gunsmith":
             if not(self.is_valid_image_path(self.albedoPath_input.text())):
                 self.albedoPath_input.setStyleSheet("border-color: #a03c3c;")
@@ -129,25 +155,48 @@ class GUI(QMainWindow):
             elif self.is_valid_image_path(self.albedoPath_input.text()) and self.is_valid_image_path(self.metallicPath_input.text()):
                 albedomap = self.albedoPath_input.text()
                 metallicmap = self.metallicPath_input.text()
-                albedo_validated = PBRMap(albedomap, metallicmap)
-                albedo_validated.nonmetallic_range_validate()
-                self.set_background_image(albedo_validated.save())
+                albedo = PBRAlbedo(albedomap, metallicmap)
+                albedo.clamp_rgb_range(self.mode, self.is_saturation_box.isChecked(),  self.saturation_limit_box.value())
+                self.set_background_image(albedo.save("corrected"))
+                self.validation_result_label.setText("Albedo texture was corrected successfully")
 
-        if self.finishstyle_box.currentText() == "Patina":
-            pass
+    def validate_albedo(self):
+        if not(self.is_valid_image_path(self.albedoPath_input.text())):
+            self.albedoPath_input.setStyleSheet("border-color: #a03c3c;")
 
-        if self.finishstyle_box.currentText() == "Custom Paint Job":
-            pass
+        if not(self.is_valid_image_path(self.metallicPath_input.text())):
+            self.metallicPath_input.setStyleSheet("border-color: #a03c3c;")
 
-    @staticmethod
-    def is_valid_image_path(image_path):
-        try:
-            with Image.open(image_path) as img:
-                return True
-        except (FileNotFoundError, IsADirectoryError):
-            return False
-        except:
-            return False
+        elif self.is_valid_image_path(self.albedoPath_input.text()) and self.is_valid_image_path(self.metallicPath_input.text()):
+            albedomap = self.albedoPath_input.text()
+            metallicmap = self.metallicPath_input.text()
+            albedo = PBRAlbedo(albedomap, metallicmap)
+            mismatched_pixels = albedo.validate_rgb_range(self.mode, self.is_saturation_box.isChecked(), self.saturation_limit_box.value())
+            self.set_background_image(albedo.save("validated"))
+            self.validation_result_label.setText(f"{100 - round(mismatched_pixels / albedo.size() * 100)}% correct")
+
+    def hs_state_changed(self):
+        self.consider_hs = self.is_saturation_box.isChecked()
+        if self.consider_hs:
+            self.saturation_limit_label.setStyleSheet("color: #A4A4A4;")
+            self.saturation_limit_box.setStyleSheet("color: #A4A4A4;")
+        else:
+            self.saturation_limit_label.setStyleSheet("color: rgba(164, 164, 164, 0.418);")
+            self.saturation_limit_box.setStyleSheet("color: rgba(164, 164, 164, 0.418);")
+        self.saturation_limit_box.setEnabled(self.consider_hs)
+
+    def ao_state_changed(self):
+        self.compensate = self.is_compensating.isChecked()
+        if self.compensate:
+            self.ao_path_label.setStyleSheet("color: #A4A4A4;")
+            self.ao_path_input.setStyleSheet("color: #A4A4A4;")
+            self.set_ao_button.setStyleSheet("color: #A4A4A4;")
+        else:
+            self.ao_path_label.setStyleSheet("color: rgba(164, 164, 164, 0.418);")
+            self.set_ao_button.setStyleSheet("color: rgba(164, 164, 164, 0.418);")
+            self.ao_path_input.setStyleSheet("color: rgba(164, 164, 164, 0.418);")
+        self.ao_path_input.setEnabled(self.compensate)
+        self.set_ao_button.setEnabled(self.compensate)
 
     def exit_app(self):
         QCoreApplication.quit()
@@ -169,3 +218,14 @@ class GUI(QMainWindow):
 
         delta = event.pos() - self.old_pos
         self.move(self.pos() + delta)
+
+    @staticmethod
+    def is_valid_image_path(image_path):
+        try:
+            with Image.open(image_path) as img:
+                return True
+        except (FileNotFoundError, IsADirectoryError):
+            return False
+        except:
+            return False
+
