@@ -1,9 +1,8 @@
-from PyQt6 import uic, QtGui
+from PyQt6 import uic
 from PyQt6.QtWidgets import QMainWindow, QPushButton, QLineEdit, QFileDialog, QToolButton, QWidget, QVBoxLayout, QLabel, \
-    QComboBox, QCheckBox, QSpinBox, QDoubleSpinBox, QStackedWidget
-from PyQt6.QtGui import QFontDatabase, QIcon, QPixmap, QImage
+    QComboBox, QCheckBox, QSpinBox, QDoubleSpinBox, QGroupBox
+from PyQt6.QtGui import QFontDatabase, QIcon, QPixmap
 from PyQt6.QtCore import Qt, QCoreApplication
-from superqt import QRangeSlider
 
 from PIL import Image
 
@@ -114,6 +113,7 @@ class GUI(QMainWindow):
         self.ao_path_label = self.findChild(QLabel, 'aoPathLabel')
         self.m_range_label = self.findChild(QLabel, 'mrangeLabel')
         self.mhs_range_label = self.findChild(QLabel, 'mhsrangeLabel')
+        self.albedo_group = self.findChild(QGroupBox, 'albedoGroup')
 
 
 
@@ -224,26 +224,11 @@ class GUI(QMainWindow):
     def mode_changed(self):
         if self.finishstyle_box.currentText() == "Gunsmith":
             self.mode = "combined"
-            self.metallic_path_label.setStyleSheet("color: #C4C4C4;")
-            self.metallicPath_input.setEnabled(True)
-            self.setmetallic_button.setEnabled(True)
-            self.is_saturation_box.setEnabled(True)
-            self.is_saturation_box.setStyleSheet("color: #C4C4C4;")
-            self.is_compensating.setEnabled(True)
-            self.m_range_label.setStyleSheet("color: #C4C4C4;")
-            self.mhs_range_label.setStyleSheet("color: #C4C4C4;")
+            self.albedo_group.setEnabled(True)
 
         if self.finishstyle_box.currentText() == "Custom Paint Job":
             self.mode = "nonmetallic"
-            self.metallic_path_label.setStyleSheet("color: rgba(164, 164, 164, 0.418);")
-            self.metallicPath_input.setEnabled(False)
-            self.setmetallic_button.setEnabled(False)
-            self.is_saturation_box.setEnabled(False)
-            self.is_saturation_box.setChecked(False)
-            self.is_saturation_box.setStyleSheet("color: rgba(164, 164, 164, 0.418);")
-            self.is_compensating.setEnabled(True)
-            self.m_range_label.setStyleSheet("color: rgba(164, 164, 164, 0.418);")
-            self.mhs_range_label.setStyleSheet("color: rgba(164, 164, 164, 0.418);")
+            self.albedo_group.setEnabled(False)
 
     def exit_app(self):
         QCoreApplication.quit()

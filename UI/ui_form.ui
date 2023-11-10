@@ -35,7 +35,7 @@
     <widget class="QComboBox" name="finishStyleBox">
      <property name="geometry">
       <rect>
-       <x>110</x>
+       <x>154</x>
        <y>10</y>
        <width>131</width>
        <height>22</height>
@@ -204,7 +204,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>Automatic PBR Fixer for CS2 Weapon Finishes</string>
+      <string>CS2 Workshop Tools Additions</string>
      </property>
      <property name="class" stdset="0">
       <string>titleText</string>
@@ -213,7 +213,7 @@
     <widget class="QLabel" name="authorLabel">
      <property name="geometry">
       <rect>
-       <x>270</x>
+       <x>200</x>
        <y>10</y>
        <width>121</width>
        <height>16</height>
@@ -271,22 +271,6 @@
     <property name="class" stdset="0">
      <string>plane</string>
     </property>
-    <widget class="QLabel" name="albedoPathLabel">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>10</y>
-       <width>211</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Albedo Texture:</string>
-     </property>
-     <property name="class" stdset="0">
-      <string>regularText</string>
-     </property>
-    </widget>
     <widget class="QLabel" name="mrangeLabel">
      <property name="geometry">
       <rect>
@@ -327,7 +311,7 @@
       <rect>
        <x>9</x>
        <y>285</y>
-       <width>211</width>
+       <width>241</width>
        <height>25</height>
       </rect>
      </property>
@@ -344,7 +328,7 @@
     <widget class="QToolButton" name="setmetallicButton">
      <property name="geometry">
       <rect>
-       <x>225</x>
+       <x>260</x>
        <y>110</y>
        <width>25</width>
        <height>25</height>
@@ -423,7 +407,7 @@
      </property>
      <property name="geometry">
       <rect>
-       <x>193</x>
+       <x>230</x>
        <y>185</y>
        <width>51</width>
        <height>22</height>
@@ -442,50 +426,12 @@
       <string>spinBox</string>
      </property>
     </widget>
-    <widget class="QToolButton" name="setalbedoButton">
-     <property name="geometry">
-      <rect>
-       <x>225</x>
-       <y>35</y>
-       <width>25</width>
-       <height>25</height>
-      </rect>
-     </property>
-     <property name="cursor">
-      <cursorShape>PointingHandCursor</cursorShape>
-     </property>
-     <property name="focusPolicy">
-      <enum>Qt::StrongFocus</enum>
-     </property>
-     <property name="text">
-      <string>...</string>
-     </property>
-     <property name="class" stdset="0">
-      <string>regularButton</string>
-     </property>
-    </widget>
     <widget class="QLineEdit" name="metallicPathInput">
      <property name="geometry">
       <rect>
        <x>9</x>
        <y>110</y>
-       <width>211</width>
-       <height>25</height>
-      </rect>
-     </property>
-     <property name="placeholderText">
-      <string>Filepath</string>
-     </property>
-     <property name="class" stdset="0">
-      <string>textInput</string>
-     </property>
-    </widget>
-    <widget class="QLineEdit" name="albedoPathInput">
-     <property name="geometry">
-      <rect>
-       <x>9</x>
-       <y>35</y>
-       <width>211</width>
+       <width>241</width>
        <height>25</height>
       </rect>
      </property>
@@ -502,7 +448,7 @@
      </property>
      <property name="geometry">
       <rect>
-       <x>225</x>
+       <x>260</x>
        <y>285</y>
        <width>25</width>
        <height>25</height>
@@ -601,21 +547,68 @@
       </rect>
      </property>
     </widget>
-    <widget class="QGroupBox" name="groupBox">
+    <widget class="QGroupBox" name="albedoGroup">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>490</y>
-       <width>231</width>
-       <height>80</height>
+       <y>10</y>
+       <width>271</width>
+       <height>61</height>
       </rect>
      </property>
      <property name="title">
       <string>Albedo Texture</string>
      </property>
-     <property name="class" stdset="0">
-      <string>plane</string>
+     <property name="alignment">
+      <set>Qt::AlignJustify|Qt::AlignVCenter</set>
      </property>
+     <property name="checkable">
+      <bool>false</bool>
+     </property>
+     <property name="class" stdset="0">
+      <string>group</string>
+     </property>
+     <widget class="QToolButton" name="setalbedoButton">
+      <property name="geometry">
+       <rect>
+        <x>240</x>
+        <y>25</y>
+        <width>25</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::StrongFocus</enum>
+      </property>
+      <property name="text">
+       <string>...</string>
+      </property>
+      <property name="class" stdset="0">
+       <string>regularButton</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="albedoPathInput">
+      <property name="geometry">
+       <rect>
+        <x>9</x>
+        <y>25</y>
+        <width>221</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="placeholderText">
+       <string>Filepath</string>
+      </property>
+      <property name="class" stdset="0">
+       <string>textInput</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QPushButton" name="validateButton">
      <property name="geometry">
