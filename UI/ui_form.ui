@@ -23,9 +23,9 @@
    <widget class="QWidget" name="optionsPlane" native="true">
     <property name="geometry">
      <rect>
-      <x>768</x>
+      <x>733</x>
       <y>34</y>
-      <width>256</width>
+      <width>291</width>
       <height>41</height>
      </rect>
     </property>
@@ -226,59 +226,17 @@
       <string>creditsText</string>
      </property>
     </widget>
-   </widget>
-   <widget class="QWidget" name="background" native="true">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>75</y>
-      <width>768</width>
-      <height>731</height>
-     </rect>
-    </property>
-    <property name="class" stdset="0">
-     <string>backgroundPlane</string>
-    </property>
-   </widget>
-   <widget class="QWidget" name="optionsPlane_2" native="true">
-    <property name="geometry">
-     <rect>
-      <x>0</x>
-      <y>34</y>
-      <width>769</width>
-      <height>41</height>
-     </rect>
-    </property>
-    <property name="class" stdset="0">
-     <string>plane</string>
-    </property>
-    <widget class="QPushButton" name="validateButton">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>10</y>
-       <width>75</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="cursor">
-      <cursorShape>PointingHandCursor</cursorShape>
-     </property>
-     <property name="text">
-      <string>Validate</string>
-     </property>
-     <property name="class" stdset="0">
-      <string>regularButton</string>
-     </property>
-    </widget>
     <widget class="QLabel" name="validationResultLabel">
      <property name="geometry">
       <rect>
-       <x>90</x>
-       <y>10</y>
-       <width>671</width>
+       <x>560</x>
+       <y>7</y>
+       <width>401</width>
        <height>21</height>
       </rect>
+     </property>
+     <property name="layoutDirection">
+      <enum>Qt::RightToLeft</enum>
      </property>
      <property name="text">
       <string/>
@@ -288,12 +246,25 @@
      </property>
     </widget>
    </widget>
+   <widget class="QWidget" name="background" native="true">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>34</y>
+      <width>733</width>
+      <height>733</height>
+     </rect>
+    </property>
+    <property name="class" stdset="0">
+     <string>backgroundPlane</string>
+    </property>
+   </widget>
    <widget class="QWidget" name="optionsPlane_3" native="true">
     <property name="geometry">
      <rect>
-      <x>768</x>
+      <x>733</x>
       <y>74</y>
-      <width>256</width>
+      <width>291</width>
       <height>694</height>
      </rect>
     </property>
@@ -316,7 +287,7 @@
       <string>regularText</string>
      </property>
     </widget>
-    <widget class="QLabel" name="albedoPathLabel_3">
+    <widget class="QLabel" name="mrangeLabel">
      <property name="geometry">
       <rect>
        <x>11</x>
@@ -332,7 +303,7 @@
       <string>regularText</string>
      </property>
     </widget>
-    <widget class="QLabel" name="albedoPathLabel_2">
+    <widget class="QLabel" name="nmrangeLabel">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -370,54 +341,6 @@
       <string>textInput</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="nmrevertButton">
-     <property name="geometry">
-      <rect>
-       <x>230</x>
-       <y>350</y>
-       <width>16</width>
-       <height>16</height>
-      </rect>
-     </property>
-     <property name="cursor">
-      <cursorShape>PointingHandCursor</cursorShape>
-     </property>
-     <property name="inputMethodHints">
-      <set>Qt::ImhHiddenText</set>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="icon">
-      <iconset>
-       <normaloff>icons/revert_icon.png</normaloff>icons/revert_icon.png</iconset>
-     </property>
-     <property name="checked">
-      <bool>false</bool>
-     </property>
-     <property name="flat">
-      <bool>false</bool>
-     </property>
-     <property name="class" stdset="0">
-      <string>iconButton</string>
-     </property>
-    </widget>
-    <widget class="Line" name="line_4">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>330</y>
-       <width>256</width>
-       <height>3</height>
-      </rect>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="class" stdset="0">
-      <string>line</string>
-     </property>
-    </widget>
     <widget class="QToolButton" name="setmetallicButton">
      <property name="geometry">
       <rect>
@@ -440,71 +363,7 @@
       <string>regularButton</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="nmrevertButton_2">
-     <property name="geometry">
-      <rect>
-       <x>231</x>
-       <y>405</y>
-       <width>16</width>
-       <height>16</height>
-      </rect>
-     </property>
-     <property name="cursor">
-      <cursorShape>PointingHandCursor</cursorShape>
-     </property>
-     <property name="inputMethodHints">
-      <set>Qt::ImhHiddenText</set>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="icon">
-      <iconset>
-       <normaloff>icons/revert_icon.png</normaloff>icons/revert_icon.png</iconset>
-     </property>
-     <property name="checked">
-      <bool>false</bool>
-     </property>
-     <property name="flat">
-      <bool>false</bool>
-     </property>
-     <property name="class" stdset="0">
-      <string>iconButton</string>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="nmrevertButton_3">
-     <property name="geometry">
-      <rect>
-       <x>230</x>
-       <y>460</y>
-       <width>16</width>
-       <height>16</height>
-      </rect>
-     </property>
-     <property name="cursor">
-      <cursorShape>PointingHandCursor</cursorShape>
-     </property>
-     <property name="inputMethodHints">
-      <set>Qt::ImhHiddenText</set>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="icon">
-      <iconset>
-       <normaloff>icons/revert_icon.png</normaloff>icons/revert_icon.png</iconset>
-     </property>
-     <property name="checked">
-      <bool>false</bool>
-     </property>
-     <property name="flat">
-      <bool>false</bool>
-     </property>
-     <property name="class" stdset="0">
-      <string>iconButton</string>
-     </property>
-    </widget>
-    <widget class="QLabel" name="albedoPathLabel_4">
+    <widget class="QLabel" name="mhsrangeLabel">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -539,22 +398,6 @@
       <string>regularText</string>
      </property>
     </widget>
-    <widget class="Line" name="line_3">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>220</y>
-       <width>256</width>
-       <height>3</height>
-      </rect>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="class" stdset="0">
-      <string>line</string>
-     </property>
-    </widget>
     <widget class="QCheckBox" name="isAoBox">
      <property name="geometry">
       <rect>
@@ -572,25 +415,6 @@
      </property>
      <property name="class" stdset="0">
       <string>checkBox</string>
-     </property>
-    </widget>
-    <widget class="Line" name="line_2">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>145</y>
-       <width>256</width>
-       <height>3</height>
-      </rect>
-     </property>
-     <property name="lineWidth">
-      <number>1</number>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="class" stdset="0">
-      <string>line</string>
      </property>
     </widget>
     <widget class="QDoubleSpinBox" name="saturationValue">
@@ -729,22 +553,6 @@
       <string>regularText</string>
      </property>
     </widget>
-    <widget class="Line" name="line">
-     <property name="geometry">
-      <rect>
-       <x>0</x>
-       <y>70</y>
-       <width>256</width>
-       <height>3</height>
-      </rect>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="class" stdset="0">
-      <string>line</string>
-     </property>
-    </widget>
     <widget class="QCheckBox" name="isSaturationBox">
      <property name="geometry">
       <rect>
@@ -764,29 +572,10 @@
       <string>checkBox</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="clampButton_2">
-     <property name="geometry">
-      <rect>
-       <x>160</x>
-       <y>660</y>
-       <width>75</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="cursor">
-      <cursorShape>PointingHandCursor</cursorShape>
-     </property>
-     <property name="text">
-      <string>Correct</string>
-     </property>
-     <property name="class" stdset="0">
-      <string>regularButton</string>
-     </property>
-    </widget>
     <widget class="QPushButton" name="clampButton">
      <property name="geometry">
       <rect>
-       <x>20</x>
+       <x>10</x>
        <y>660</y>
        <width>75</width>
        <height>23</height>
@@ -802,12 +591,70 @@
       <string>mainButton</string>
      </property>
     </widget>
+    <widget class="QSpinBox" name="nmminBox">
+     <property name="geometry">
+      <rect>
+       <x>155</x>
+       <y>345</y>
+       <width>42</width>
+       <height>22</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QGroupBox" name="groupBox">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>490</y>
+       <width>231</width>
+       <height>80</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Albedo Texture</string>
+     </property>
+     <property name="class" stdset="0">
+      <string>plane</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="validateButton">
+     <property name="geometry">
+      <rect>
+       <x>210</x>
+       <y>660</y>
+       <width>75</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
+     <property name="text">
+      <string>Validate</string>
+     </property>
+     <property name="class" stdset="0">
+      <string>regularButton</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="image_plane" native="true">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>34</y>
+      <width>733</width>
+      <height>733</height>
+     </rect>
+    </property>
+    <property name="class" stdset="0">
+     <string>backgroundPlane</string>
+    </property>
    </widget>
    <zorder>background</zorder>
    <zorder>optionsPlane</zorder>
    <zorder>menuBar</zorder>
-   <zorder>optionsPlane_2</zorder>
    <zorder>optionsPlane_3</zorder>
+   <zorder>image_plane</zorder>
   </widget>
  </widget>
  <resources/>
