@@ -264,7 +264,7 @@
       <string>iconButton</string>
      </property>
     </widget>
-    <widget class="QLabel" name="validationResultLabel">
+    <widget class="QLabel" name="statusLabel">
      <property name="geometry">
       <rect>
        <x>350</x>
