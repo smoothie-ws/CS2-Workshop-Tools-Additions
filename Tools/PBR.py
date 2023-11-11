@@ -21,7 +21,7 @@ class PBRAlbedo:
         self.RGB = RGB(RGB_range)
         if albedo_path is not None:
             self.albedo_path = albedo_path
-            self.albedo_image = Image.open(albedo_path)
+            self.albedo_image = Image.open(albedo_path, 'r')
             self.albedo_corrected = self.albedo_image
             self.albedo_validated = self.albedo_image
 
@@ -194,6 +194,7 @@ class PBRAlbedo:
             self.albedo_validated.putalpha(alpha)
 
         return mismatched_pixels
+
     def save(self, directory):
         if self.albedo_corrected is not None:
             albedo_filename, albedo_extension = os.path.splitext(os.path.basename(self.albedo_path))

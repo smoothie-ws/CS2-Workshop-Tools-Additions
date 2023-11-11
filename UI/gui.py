@@ -16,7 +16,7 @@ from ctypes import windll, c_bool, c_int, POINTER, Structure
 from Tools.PBR import PBRAlbedo
 
 
-class AccentPolicy(Structure):
+class ACCENTPOLICY(Structure):
     _fields_ = [
         ('AccentState', DWORD),
         ('AccentFlags', DWORD),
@@ -28,7 +28,7 @@ class AccentPolicy(Structure):
 class WINCOMPATTRDATA(Structure):
     _fields_ = [
         ('Attribute', DWORD),
-        ('Data', POINTER(AccentPolicy)),
+        ('Data', POINTER(ACCENTPOLICY)),
         ('SizeOfData', ULONG),
     ]
 
@@ -55,7 +55,7 @@ class GUI(QMainWindow):
     def blur_background(self):
         self.setWindowFlag(Qt.WindowType.FramelessWindowHint)
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
-        accent_policy = AccentPolicy()
+        accent_policy = ACCENTPOLICY()
         accent_policy.AccentState = 3
 
         win_comp_attr_data = WINCOMPATTRDATA()
@@ -105,10 +105,10 @@ class GUI(QMainWindow):
         self.validate_button = self.findChild(QPushButton, 'validateButton')
         self.save_button = self.findChild(QPushButton, 'saveButton')
         self.status_label = self.findChild(QLabel, 'statusLabel')
-        self.albedoPath_input = self.findChild(QLineEdit, 'albedoPathInput')
-        self.metallicPath_input = self.findChild(QLineEdit, 'metallicPathInput')
-        self.metallicPath_input = self.findChild(QLineEdit, 'metallicPathInput')
-        self.finishstyle_box = self.findChild(QComboBox, 'finishStyleBox')
+        self.albedo_path_input = self.findChild(QLineEdit, 'albedoPathInput')
+        self.metallic_path_input = self.findChild(QLineEdit, 'metallicPathInput')
+        self.metallic_path_input = self.findChild(QLineEdit, 'metallicPathInput')
+        self.finish_style_box = self.findChild(QComboBox, 'finishStyleBox')
         self.is_saturation_box = self.findChild(QCheckBox, 'isSaturationBox')
         self.is_compensating = self.findChild(QCheckBox, 'isAoBox')
         self.saturation_limit_label = self.findChild(QLabel, 'saturationLabel')
@@ -138,6 +138,7 @@ class GUI(QMainWindow):
         self.rgb_info_label.setOpenExternalLinks(True)
         self.exit_button = self.findChild(QPushButton, 'exitButton')
         self.min_button = self.findChild(QPushButton, 'minButton')
+        self.revert_button = self.findChild(QPushButton, 'revertButton')
 
         self.background = self.findChild(QWidget, 'background')
         self.background_layout = QVBoxLayout(self.background)
@@ -151,52 +152,52 @@ class GUI(QMainWindow):
         self.active_image_label = QLabel()
         self.active_image_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
 
-        self.setalbedo_button.clicked.connect(lambda: self.load_texture(self.albedo_icon, self.albedoPath_input, True))
-        self.setmetallic_button.clicked.connect(lambda: self.load_texture(self.metallic_icon, self.metallicPath_input))
+        self.setalbedo_button.clicked.connect(lambda: self.load_texture(self.albedo_icon, self.albedo_path_input, True))
+        self.setmetallic_button.clicked.connect(lambda: self.load_texture(self.metallic_icon, self.metallic_path_input))
         self.set_ao_button.clicked.connect(lambda: self.load_texture(self.ao_icon, self.ao_path_input))
         self.clamp_button.clicked.connect(self.correct_albedo)
         self.validate_button.clicked.connect(self.validate_albedo)
         self.save_button.clicked.connect(self.save_textures)
         self.is_saturation_box.stateChanged.connect(self.hs_state_changed)
-        self.finishstyle_box.currentIndexChanged.connect(self.mode_changed)
+        self.finish_style_box.currentIndexChanged.connect(self.mode_changed)
         self.is_compensating.stateChanged.connect(self.ao_state_changed)
         self.exit_button.clicked.connect(self.exit_app)
         self.min_button.clicked.connect(self.min_app)
+        self.revert_button.clicked.connect(self.revert_range)
 
     def load_texture(self, icon, texture_input, is_set_image=False):
-        supported_formats = 'Image (*.tga;*.png;*.jpg;*.jpeg;*.jp2;*.bmp)'
+        texture_input.setStyleSheet("border-color: #343434;")
         try:
-            filepath = QFileDialog.getOpenFileName(self, 'Open File', 'C:/', supported_formats)
+            filepath = QFileDialog.getOpenFileName(self, 'Open File', 'C:/', 'Image (*.tga;*.png;*.jpg;*.jpeg;*.jp2;*.bmp)')
             texture_input.setText(filepath[0])
             self.set_icon(Image.open(filepath[0]), icon)
+
             if is_set_image:
                 self.set_image(self.active_image_label, self.active_image_layout, 650, 650, Image.open(filepath[0]))
+
             self.status_label.setText("Albedo texture was loaded successfully")
         except Exception:
             texture_input.setStyleSheet("border-color: #a03c3c;")
 
     def correct_albedo(self):
         valid_inputs = True
-        if not (self.is_valid_image_path(self.albedoPath_input.text())):
-            self.albedoPath_input.setStyleSheet("border-color: #a03c3c;")
-            self.status_label.setText("Please make sure you have attached valid textures")
+        if not (self.is_valid_image_path(self.albedo_path_input.text())):
+            self.albedo_path_input.setStyleSheet("border-color: #a03c3c;")
             valid_inputs = False
 
         if self.compensate and not (self.is_valid_image_path(self.ao_path_input.text())):
             self.ao_path_input.setStyleSheet("border-color: #a03c3c;")
-            self.status_label.setText("Please make sure you have attached valid textures")
             valid_inputs = False
 
-        if self.mode == "combined" and not (self.is_valid_image_path(self.metallicPath_input.text())):
-            self.metallicPath_input.setStyleSheet("border-color: #a03c3c;")
-            self.status_label.setText("Please make sure you have attached valid textures")
+        if self.mode == "combined" and not (self.is_valid_image_path(self.metallic_path_input.text())):
+            self.metallic_path_input.setStyleSheet("border-color: #a03c3c;")
             valid_inputs = False
 
         if valid_inputs == True:
-            albedomap = self.albedoPath_input.text()
+            albedomap = self.albedo_path_input.text()
 
             if self.mode == "combined":
-                metallicmap = self.metallicPath_input.text()
+                metallicmap = self.metallic_path_input.text()
             else:
                 metallicmap = None
 
@@ -218,40 +219,45 @@ class GUI(QMainWindow):
             else:
                 self.status_label.setText("Albedo texture was corrected successfully")
 
-    def validate_albedo(self):
-        self.ao_path_input.setStyleSheet("border-color: #343434;")
-        valid_inputs = True
-        if not (self.is_valid_image_path(self.albedoPath_input.text())):
-            self.albedoPath_input.setStyleSheet("border-color: #a03c3c;")
+        else:
             self.status_label.setText("Please make sure you have attached valid textures")
+
+    def validate_albedo(self):
+        valid_inputs = True
+        if not (self.is_valid_image_path(self.albedo_path_input.text())):
+            self.albedo_path_input.setStyleSheet("border-color: #a03c3c;")
             valid_inputs = False
 
-        if self.mode == "combined" and not (self.is_valid_image_path(self.metallicPath_input.text())):
-            self.metallicPath_input.setStyleSheet("border-color: #a03c3c;")
-            self.status_label.setText("Please make sure you have attached valid textures")
+        if self.mode == "combined" and not (self.is_valid_image_path(self.metallic_path_input.text())):
+            self.metallic_path_input.setStyleSheet("border-color: #a03c3c;")
             valid_inputs = False
 
         if valid_inputs == True:
-            albedomap = self.albedoPath_input.text()
+            albedo_map_path = self.albedo_path_input.text()
 
             if self.mode == "combined":
-                metallicmap = self.metallicPath_input.text()
+                metallic_map_path = self.metallic_path_input.text()
             else:
-                metallicmap = None
+                metallic_map_path = None
 
             self.pbr_set = PBRAlbedo(
                 [self.nm_min.value(), self.nm_max.value(), self.m_min.value(), self.m_max.value(), self.mhs_min.value(),
-                 self.mhs_max.value()], albedomap, metallicmap)
+                 self.mhs_max.value()], albedo_map_path, metallic_map_path)
+
             mismatched_pixels = self.pbr_set.validate_rgb_range(self.mode, self.is_saturation_box.isChecked(),
                                                                 self.saturation_limit_box.value())
+
             self.set_image(self.active_image_label, self.active_image_layout, 650, 650, self.pbr_set.albedo_validated)
             self.status_label.setText(f"{100 - round(mismatched_pixels / self.pbr_set.size() * 100)}% correct")
+
+        else:
+            self.status_label.setText("Please make sure you have attached valid textures")
 
     def save_textures(self):
         if self.pbr_set is not None:
             if self.pbr_set.albedo_corrected is not None or self.pbr_set.ao_corrected is not None:
                 try:
-                    directory = os.path.dirname(self.albedoPath_input.text())
+                    directory = os.path.dirname(self.albedo_path_input.text())
                     # selected_directory = QFileDialog.getExistingDirectory(self, "Select a directory", directory)
                     self.pbr_set.save(directory)
                 except Exception:
@@ -272,14 +278,14 @@ class GUI(QMainWindow):
         self.ao_group.setEnabled(self.compensate)
 
     def mode_changed(self):
-        if self.finishstyle_box.currentText() == "Gunsmith":
+        if self.finish_style_box.currentText() == "Gunsmith":
             self.mode = "combined"
             self.albedo_group.setEnabled(True)
             self.metallic_group.setEnabled(True)
             self.ao_group.setEnabled(True)
             self.metallic_icon.setEnabled(True)
             self.setmetallic_button.setEnabled(True)
-            self.metallicPath_input.setEnabled(True)
+            self.metallic_path_input.setEnabled(True)
             self.nm_range_label.setEnabled(True)
             self.m_range_label.setEnabled(True)
             self.mhs_range_label.setEnabled(True)
@@ -290,7 +296,7 @@ class GUI(QMainWindow):
             self.mhs_min.setEnabled(True)
             self.mhs_max.setEnabled(True)
 
-        if self.finishstyle_box.currentText() == "Custom Paint Job":
+        if self.finish_style_box.currentText() == "Custom Paint Job":
             self.mode = "nonmetallic"
             self.albedo_group.setEnabled(True)
             self.metallic_group.setEnabled(False)
@@ -305,14 +311,14 @@ class GUI(QMainWindow):
             self.mhs_min.setEnabled(False)
             self.mhs_max.setEnabled(False)
 
-        if self.finishstyle_box.currentText() == "Patina":
+        if self.finish_style_box.currentText() == "Patina":
             self.mode = "metallic"
             self.albedo_group.setEnabled(True)
             self.metallic_group.setEnabled(True)
             self.ao_group.setEnabled(True)
             self.metallic_icon.setEnabled(False)
             self.setmetallic_button.setEnabled(False)
-            self.metallicPath_input.setEnabled(False)
+            self.metallic_path_input.setEnabled(False)
             self.nm_range_label.setEnabled(False)
             self.m_range_label.setEnabled(True)
             self.mhs_range_label.setEnabled(True)
@@ -323,14 +329,15 @@ class GUI(QMainWindow):
             self.mhs_min.setEnabled(True)
             self.mhs_max.setEnabled(True)
 
-        if self.finishstyle_box.currentText() == "Anodized Multicolored":
+        if self.finish_style_box.currentText() == "Anodized Multicolored":
             self.mode = "metallic"
             self.albedo_group.setEnabled(True)
             self.metallic_group.setEnabled(True)
             self.ao_group.setEnabled(False)
             self.metallic_icon.setEnabled(False)
             self.setmetallic_button.setEnabled(False)
-            self.metallicPath_input.setEnabled(False)
+            self.metallic_path_input.setEnabled(False)
+            self.is_compensating.setEnabled(False)
             self.nm_range_label.setEnabled(False)
             self.m_range_label.setEnabled(True)
             self.mhs_range_label.setEnabled(True)
@@ -341,11 +348,12 @@ class GUI(QMainWindow):
             self.mhs_min.setEnabled(True)
             self.mhs_max.setEnabled(True)
 
-        if self.finishstyle_box.currentText() in ["Spray-Paint", "Hydrographic", "Anodized", "Anodized Airbrushed"]:
+        if self.finish_style_box.currentText() in ["Spray-Paint", "Hydrographic", "Anodized", "Anodized Airbrushed"]:
             self.mode = "nonmetallic"
             self.albedo_group.setEnabled(True)
             self.metallic_group.setEnabled(False)
             self.ao_group.setEnabled(False)
+            self.is_compensating.setEnabled(False)
             self.nm_range_label.setEnabled(True)
             self.m_range_label.setEnabled(False)
             self.mhs_range_label.setEnabled(False)
@@ -355,6 +363,14 @@ class GUI(QMainWindow):
             self.m_max.setEnabled(False)
             self.mhs_min.setEnabled(False)
             self.mhs_max.setEnabled(False)
+
+    def revert_range(self):
+        self.nm_min.setValue(55)
+        self.nm_max.setValue(220)
+        self.m_min.setValue(180)
+        self.m_max.setValue(250)
+        self.mhs_min.setValue(90)
+        self.mhs_max.setValue(250)
 
     @staticmethod
     def exit_app():

@@ -313,7 +313,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>480</y>
+       <y>510</y>
        <width>271</width>
        <height>121</height>
       </rect>
@@ -480,7 +480,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>35</y>
+        <y>45</y>
         <width>101</width>
         <height>21</height>
        </rect>
@@ -496,7 +496,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>75</y>
+        <y>85</y>
         <width>111</width>
         <height>21</height>
        </rect>
@@ -512,7 +512,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>115</y>
+        <y>125</y>
         <width>151</width>
         <height>21</height>
        </rect>
@@ -528,7 +528,7 @@
       <property name="geometry">
        <rect>
         <x>150</x>
-        <y>35</y>
+        <y>45</y>
         <width>51</width>
         <height>22</height>
        </rect>
@@ -547,7 +547,7 @@
       <property name="geometry">
        <rect>
         <x>160</x>
-        <y>10</y>
+        <y>20</y>
         <width>31</width>
         <height>21</height>
        </rect>
@@ -563,7 +563,7 @@
       <property name="geometry">
        <rect>
         <x>210</x>
-        <y>35</y>
+        <y>45</y>
         <width>51</width>
         <height>22</height>
        </rect>
@@ -582,7 +582,7 @@
       <property name="geometry">
        <rect>
         <x>220</x>
-        <y>10</y>
+        <y>20</y>
         <width>31</width>
         <height>21</height>
        </rect>
@@ -598,7 +598,7 @@
       <property name="geometry">
        <rect>
         <x>150</x>
-        <y>75</y>
+        <y>85</y>
         <width>51</width>
         <height>22</height>
        </rect>
@@ -617,7 +617,7 @@
       <property name="geometry">
        <rect>
         <x>210</x>
-        <y>75</y>
+        <y>85</y>
         <width>51</width>
         <height>22</height>
        </rect>
@@ -636,7 +636,7 @@
       <property name="geometry">
        <rect>
         <x>150</x>
-        <y>115</y>
+        <y>125</y>
         <width>51</width>
         <height>22</height>
        </rect>
@@ -655,7 +655,7 @@
       <property name="geometry">
        <rect>
         <x>210</x>
-        <y>115</y>
+        <y>125</y>
         <width>51</width>
         <height>22</height>
        </rect>
@@ -680,19 +680,57 @@
        </rect>
       </property>
       <property name="text">
-       <string>&lt;a style=&quot;color: #4979a0; text-decoration: none;&quot; href=&quot;https://www.counter-strike.net/workshop/workshopfinishes#pbr&quot;&gt;?&lt;/a&gt;</string>
+       <string>&lt;a style=&quot;color: #4979a0; text-decoration: none;&quot; href=&quot;https://www.counter-strike.net/workshop/workshopfinishes#pr&quot;&gt;?&lt;/a&gt;</string>
       </property>
       <property name="class" stdset="0">
        <string>regularText</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="revertButton">
+      <property name="geometry">
+       <rect>
+        <x>250</x>
+        <y>5</y>
+        <width>16</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
+      <property name="inputMethodHints">
+       <set>Qt::ImhHiddenText</set>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>icons/revert_icon.png</normaloff>icons/revert_icon.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>16</width>
+        <height>16</height>
+       </size>
+      </property>
+      <property name="checked">
+       <bool>false</bool>
+      </property>
+      <property name="flat">
+       <bool>false</bool>
+      </property>
+      <property name="class" stdset="0">
+       <string>iconButton</string>
       </property>
      </widget>
     </widget>
     <widget class="QPushButton" name="saveButton">
      <property name="geometry">
       <rect>
-       <x>10</x>
-       <y>660</y>
-       <width>271</width>
+       <x>50</x>
+       <y>650</y>
+       <width>191</width>
        <height>23</height>
       </rect>
      </property>
@@ -706,36 +744,13 @@
       <string>mainButton</string>
      </property>
     </widget>
-    <widget class="QLabel" name="infoLabel">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>600</y>
-       <width>271</width>
-       <height>51</height>
-      </rect>
-     </property>
-     <property name="cursor">
-      <cursorShape>ArrowCursor</cursorShape>
-     </property>
-     <property name="text">
-      <string>The process of correcting or validating 
-textures may take several seconds</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-     <property name="class" stdset="0">
-      <string>regularText</string>
-     </property>
-    </widget>
     <widget class="QGroupBox" name="albedoGroup">
      <property name="geometry">
       <rect>
        <x>10</x>
        <y>170</y>
        <width>271</width>
-       <height>121</height>
+       <height>161</height>
       </rect>
      </property>
      <property name="title">
@@ -834,7 +849,7 @@ textures may take several seconds</string>
       <property name="geometry">
        <rect>
         <x>190</x>
-        <y>90</y>
+        <y>130</y>
         <width>75</width>
         <height>23</height>
        </rect>
@@ -843,7 +858,7 @@ textures may take several seconds</string>
        <cursorShape>PointingHandCursor</cursorShape>
       </property>
       <property name="text">
-       <string>Validate</string>
+       <string>Verify</string>
       </property>
       <property name="class" stdset="0">
        <string>regularButton</string>
@@ -853,7 +868,7 @@ textures may take several seconds</string>
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>90</y>
+        <y>130</y>
         <width>75</width>
         <height>23</height>
        </rect>
@@ -868,12 +883,38 @@ textures may take several seconds</string>
        <string>mainButton</string>
       </property>
      </widget>
+     <widget class="QLabel" name="infoLabel">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>60</y>
+        <width>271</width>
+        <height>71</height>
+       </rect>
+      </property>
+      <property name="cursor">
+       <cursorShape>ArrowCursor</cursorShape>
+      </property>
+      <property name="contextMenuPolicy">
+       <enum>Qt::PreventContextMenu</enum>
+      </property>
+      <property name="text">
+       <string>The correction or verification process 
+may take some time</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+      <property name="class" stdset="0">
+       <string>regularText</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QGroupBox" name="metallicGroup">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>300</y>
+       <y>340</y>
        <width>271</width>
        <height>141</height>
       </rect>
@@ -1035,7 +1076,7 @@ textures may take several seconds</string>
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>460</y>
+       <y>490</y>
        <width>231</width>
        <height>17</height>
       </rect>
