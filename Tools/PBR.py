@@ -27,11 +27,11 @@ class PBRAlbedo:
 
         if metallic_path is not None:
             self.metallic_path = metallic_path
-            self.metallic_image = Image.open(metallic_path)
+            self.metallic_image = Image.open(metallic_path, 'r')
 
         if ao_path is not None:
             self.ao_path = ao_path
-            self.ao_image = Image.open(ao_path).convert(self.albedo_image.mode)
+            self.ao_image = Image.open(ao_path, 'r').convert(self.albedo_image.mode)
             self.ao_corrected = self.ao_image
 
     def clamp_rgb_range(self, mode, is_compensating=False, coefficient=1.0, is_saturation=False, high_saturation_definition=None):
