@@ -218,8 +218,8 @@ class GUI(QMainWindow):
                                    Qt.TransformationMode.SmoothTransformation)
             label.setPixmap(pixmap)
             layout.addWidget(label)
-        except Exception as e:
-            print(e)
+        except Exception:
+            pass
 
     def set_icon(self, image, icon_widget):
         try:
@@ -227,8 +227,8 @@ class GUI(QMainWindow):
             image.putalpha(Image.new('L', image.size, 255))
             pixmap = QPixmap.fromImage(ImageQt(image))
             icon_widget.setIcon(QIcon(pixmap))
-        except Exception as e:
-            print(e)
+        except Exception:
+            pass
 
     def load_texture(self, icon, texture_input, is_set_image=False):
         texture_input.setStyleSheet("border-color: #343434;")
@@ -304,9 +304,7 @@ class GUI(QMainWindow):
             else:
                 metallic_map_path = None
 
-            self.pbr_set = PBRAlbedo(
-                [self.nm_min.value(), self.nm_max.value(), self.m_min.value(), self.m_max.value(), self.mhs_min.value(),
-                 self.mhs_max.value()], albedo_map_path, metallic_map_path)
+            self.pbr_set = PBRAlbedo([self.nm_min, self.nm_max, self.m_min, self.m_max, self.mhs_min, self.mhs_max], albedo_map_path, metallic_map_path)
 
             mismatched_pixels = self.pbr_set.validate_rgb_range(self.mode, self.is_saturation_box.isChecked(),
                                                                 self.saturation_limit_box.value())

@@ -36,9 +36,6 @@ class UpdateThread(QThread):
                 percent_complete = (downloaded / total_size) * 100
                 self.update_signal.emit(f"Downloading... {percent_complete / 10000:.2f}%")
 
-        for i in range(1000000):
-            self.update_signal.emit(f"Downloading... {i / 10000:.2f}%")
-
         self.update_signal.emit("Extracting...")
         extract_path = '.'
 
