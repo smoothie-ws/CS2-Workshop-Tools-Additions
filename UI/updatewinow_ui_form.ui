@@ -78,7 +78,7 @@
 Would you like to update?</string>
      </property>
      <property name="alignment">
-      <set>Qt::AlignCenter</set>
+      <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
      </property>
      <property name="class" stdset="0">
       <string>regularText</string>
