@@ -200,12 +200,11 @@ class PBRAlbedo:
             albedo_filename, albedo_extension = os.path.splitext(os.path.basename(self.albedo_path))
             albedo_file_path = directory + "/" + albedo_filename + "_corrected" + albedo_extension
             self.albedo_corrected.save(albedo_file_path)
-            print(albedo_file_path)
+
         if self.ao_corrected is not None:
             ao_filename, ao_extension = os.path.splitext(os.path.basename(self.ao_path))
             ao_file_path = directory + "/" + ao_filename + "_corrected" + ao_extension
             self.ao_corrected.save(ao_file_path)
-            print(ao_file_path)
 
     def size(self):
         return self.albedo_image.width * self.albedo_image.height

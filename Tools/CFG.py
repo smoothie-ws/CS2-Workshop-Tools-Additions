@@ -8,6 +8,8 @@ class CFG:
         with open(self.file, 'r') as configfile:
             config.read_file(configfile)
 
+        self.version = config.get('APPLICATION', 'version')
+
         self.finish_style = config.get('DEFAULTS', 'finish_style')
         self.mode = config.get('DEFAULTS', 'mode')
         self.is_saturation_considered = config.getboolean('DEFAULTS', 'is_saturation_considered')
@@ -37,6 +39,10 @@ class CFG:
             'm_max': self.m_max,
             'mhs_min': self.mhs_min,
             'mhs_max': self.mhs_max
+        }
+
+        config['APPLICATION'] = {
+            'version': self.version
         }
 
         with open(self.file, 'w') as configfile:

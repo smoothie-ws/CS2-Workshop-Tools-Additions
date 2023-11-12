@@ -98,6 +98,8 @@ class GUI(QMainWindow):
 
             self.cfg.write()
 
+            self.status_label.setText("The current settings have been successfully set as default settings")
+
     def blur_background(self):
         self.setWindowFlag(Qt.WindowType.FramelessWindowHint)
         self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
@@ -116,7 +118,6 @@ class GUI(QMainWindow):
             uic.loadUi('UI/ui_form.ui', self)
             QFontDatabase.addApplicationFont("UI/fonts/Rubik/Rubik-Medium.ttf")
             self.setStyleSheet(style.read())
-            self.show()
             self.setup_widgets()
             self.set_image(self.background_image_label, self.background_layout, 733, 733,
                            Image.open('UI/background.png'), False)
@@ -323,6 +324,7 @@ class GUI(QMainWindow):
                     directory = os.path.dirname(self.albedo_path_input.text())
                     # selected_directory = QFileDialog.getExistingDirectory(self, "Select a directory", directory)
                     self.pbr_set.save(directory)
+                    self.status_label.setText("Successfully saved")
                 except Exception:
                     pass
         else:
