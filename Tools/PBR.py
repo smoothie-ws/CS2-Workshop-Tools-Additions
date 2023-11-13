@@ -43,52 +43,54 @@ class PBRAlbedo:
             alpha = None
             self.albedo_corrected = self.albedo_image.convert("RGB")
 
-        albedo_data = np.array(self.albedo_corrected).astype(np.float32)
+        # albedo_data = np.array(self.albedo_corrected).astype(np.float32)
+        #
+        # if mode == "combined":
+        #
+        #     metallic = self.metallic_image.convert("RGB")
+        #     metallic_data = np.array(metallic)
+        #     metallic_mask = (metallic_data < 128).any(axis=2)
+        #
+        #     if is_saturation:
+        #         if high_saturation_definition is not None:
+        #             max_albedo_value = albedo_data.max(axis=2)
+        #             saturation_mask = (
+        #                     (max_albedo_value > 16) &
+        #                     ((max_albedo_value - albedo_data.min(axis=2)) / max_albedo_value < high_saturation_definition)
+        #             )
+        #
+        #             albedo_data = np.where(metallic_mask[..., None],
+        #                                    np.clip(albedo_data, self.RGB.min_nm, self.RGB.max_nm),
+        #                                    np.where(saturation_mask[..., None],
+        #                                             np.clip(albedo_data, self.RGB.min_m, self.RGB.max_m),
+        #                                             np.clip(albedo_data, self.RGB.min_m_hs, self.RGB.max_m_hs)))
+        #     else:
+        #         albedo_data = np.where(metallic_mask[..., None], np.clip(albedo_data, self.RGB.min_nm, self.RGB.max_nm),
+        #                                np.clip(albedo_data, self.RGB.min_m, self.RGB.max_m))
+        #
+        # elif mode == "metallic":
+        #     if is_saturation:
+        #         if high_saturation_definition is not None:
+        #             max_albedo_value = albedo_data.max(axis=2)
+        #             saturation_mask = (
+        #                     (max_albedo_value > 16) &
+        #                     ((max_albedo_value - albedo_data.min(
+        #                         axis=2)) / max_albedo_value < high_saturation_definition)
+        #             )
+        #
+        #             albedo_data = np.where(saturation_mask[..., None],
+        #                                    np.clip(albedo_data, self.RGB.min_m, self.RGB.max_m),
+        #                                    np.clip(albedo_data, self.RGB.min_m_hs, self.RGB.max_m_hs))
+        #     else:
+        #         albedo_data = np.clip(albedo_data, self.RGB.min_m, self.RGB.max_m)
+        #
+        # elif mode == "nonmetallic":
+        #     albedo_data = np.clip(albedo_data, self.RGB.min_nm, self.RGB.max_nm)
 
-        if mode == "combined":
+        # self.albedo_corrected = Image.fromarray(albedo_data.astype('uint8'), mode="RGB")
 
-            metallic = self.metallic_image.convert("RGB")
-            metallic_data = np.array(metallic)
-            metallic_mask = (metallic_data < 128).any(axis=2)
-
-            if is_saturation:
-                if high_saturation_definition is not None:
-                    max_albedo_value = albedo_data.max(axis=2)
-                    saturation_mask = (
-                            (max_albedo_value > 16) &
-                            ((max_albedo_value - albedo_data.min(
-                                axis=2)) / max_albedo_value < high_saturation_definition)
-                    )
-
-                    albedo_data = np.where(metallic_mask[..., None],
-                                           np.clip(albedo_data, self.RGB.min_nm, self.RGB.max_nm),
-                                           np.where(saturation_mask[..., None],
-                                                    np.clip(albedo_data, self.RGB.min_m, self.RGB.max_m),
-                                                    np.clip(albedo_data, self.RGB.min_m_hs, self.RGB.max_m_hs)))
-            else:
-                albedo_data = np.where(metallic_mask[..., None], np.clip(albedo_data, self.RGB.min_nm, self.RGB.max_nm),
-                                       np.clip(albedo_data, self.RGB.min_m, self.RGB.max_m))
-
-        elif mode == "metallic":
-            if is_saturation:
-                if high_saturation_definition is not None:
-                    max_albedo_value = albedo_data.max(axis=2)
-                    saturation_mask = (
-                            (max_albedo_value > 16) &
-                            ((max_albedo_value - albedo_data.min(
-                                axis=2)) / max_albedo_value < high_saturation_definition)
-                    )
-
-                    albedo_data = np.where(saturation_mask[..., None],
-                                           np.clip(albedo_data, self.RGB.min_m, self.RGB.max_m),
-                                           np.clip(albedo_data, self.RGB.min_m_hs, self.RGB.max_m_hs))
-            else:
-                albedo_data = np.clip(albedo_data, self.RGB.min_m, self.RGB.max_m)
-
-        elif mode == "nonmetallic":
-            albedo_data = np.clip(albedo_data, self.RGB.min_nm, self.RGB.max_nm)
-
-        self.albedo_corrected = Image.fromarray(albedo_data.astype('uint8'), mode="RGB")
+        self.albedo_corrected = self.albedo_image.convert("L")
+        self.albedo_corrected = self.albedo_image.split()[-1]
 
         if alpha:
             self.albedo_corrected.putalpha(alpha)
