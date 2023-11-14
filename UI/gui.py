@@ -258,7 +258,7 @@ class GUI(QMainWindow):
             self.metallic_path_input.setStyleSheet("border-color: #a03c3c;")
             valid_inputs = False
 
-        if valid_inputs == True:
+        if valid_inputs:
             albedomap = self.albedo_path_input.text()
 
             if self.mode == "combined":
@@ -296,7 +296,7 @@ class GUI(QMainWindow):
             self.metallic_path_input.setStyleSheet("border-color: #a03c3c;")
             valid_inputs = False
 
-        if valid_inputs == True:
+        if valid_inputs:
             albedo_map_path = self.albedo_path_input.text()
 
             if self.mode == "combined":
@@ -306,8 +306,7 @@ class GUI(QMainWindow):
 
             self.pbr_set = PBRAlbedo([self.nm_min, self.nm_max, self.m_min, self.m_max, self.mhs_min, self.mhs_max], albedo_map_path, metallic_map_path)
 
-            mismatched_pixels = self.pbr_set.validate_rgb_range(self.mode, self.is_saturation_box.isChecked(),
-                                                                self.saturation_limit_box.value())
+            mismatched_pixels = self.pbr_set.validate_rgb_range(self.mode)
 
             self.set_image(self.active_image_label, self.active_image_layout, 650, 650, self.pbr_set.albedo_validated)
             self.status_label.setText(f"{100 - round(mismatched_pixels / self.pbr_set.size() * 100)}% correct")

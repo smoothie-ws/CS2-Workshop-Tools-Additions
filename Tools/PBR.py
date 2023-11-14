@@ -1,6 +1,35 @@
 import os
 from PIL import Image, ImageChops, ImageEnhance
 import numpy as np
+import numexpr as ne
+
+
+def luminance(image_data):
+    linear = ne.evaluate(
+        'where(image_data <= 0.04045, image_data / 12.92, ((image_data + 0.055) / 1.055) ** 2.4) * 255'
+    )
+
+    luminance_image = Image.fromarray(linear.astype('uint8')).convert('L')
+    return np.array(luminance_image, dtype=np.float32)
+
+
+def clip_metallic(image):
+    img = image.convert("HSV")
+    v = img.split()[-1]
+
+    v_data = np.array(v, dtype=np.float32)
+    v_data = np.power(v_data, v_data / 70)
+    v_data = np.clip(v_data, 0, 255)
+
+    return ImageChops.multiply(image, Image.fromarray(v_data.astype('uint8')).convert('RGB'))
+
+
+def verify_range(image_data):
+    luminance_data = luminance(image_data / 255.0)
+    image_data[(luminance_data < 7)] = [0, 0, 255]
+    image_data[(luminance_data > 235)] = [255, 0, 0]
+
+    return image_data
 
 
 class RGB:
@@ -21,20 +50,21 @@ class PBRAlbedo:
         self.RGB = RGB(RGB_range)
         if albedo_path is not None:
             self.albedo_path = albedo_path
-            self.albedo_image = Image.open(albedo_path, 'r')
-            self.albedo_corrected = self.albedo_image
-            self.albedo_validated = self.albedo_image
+            self.albedo_image = Image.open(albedo_path)
+            self.albedo_corrected = self.albedo_image.convert("RGB")
+            self.albedo_validated = self.albedo_image.convert("RGB")
 
         if metallic_path is not None:
             self.metallic_path = metallic_path
-            self.metallic_image = Image.open(metallic_path, 'r')
+            self.metallic_image = Image.open(metallic_path)
 
         if ao_path is not None:
             self.ao_path = ao_path
-            self.ao_image = Image.open(ao_path, 'r').convert(self.albedo_image.mode)
+            self.ao_image = Image.open(ao_path).convert(self.albedo_image.mode)
             self.ao_corrected = self.ao_image
 
-    def clamp_rgb_range(self, mode, is_compensating=False, coefficient=1.0, is_saturation=False, high_saturation_definition=None):
+    def clamp_rgb_range(self, mode, is_compensating=False, coefficient=1.0, is_saturation=False,
+                        high_saturation_definition=None):
 
         if self.albedo_image.mode == 'RGBA':
             alpha = self.albedo_image.split()[-1]
@@ -89,8 +119,7 @@ class PBRAlbedo:
 
         # self.albedo_corrected = Image.fromarray(albedo_data.astype('uint8'), mode="RGB")
 
-        self.albedo_corrected = self.albedo_image.convert("L")
-        self.albedo_corrected = self.albedo_image.split()[-1]
+        # self.albedo_corrected = srgb_to_linear(self.albedo_image).convert("L")
 
         if alpha:
             self.albedo_corrected.putalpha(alpha)
@@ -104,98 +133,31 @@ class PBRAlbedo:
             compensation = ImageChops.subtract(self.ao_corrected, factor)
             self.ao_corrected = compensation.convert("L")
 
-    def validate_rgb_range(self, mode, is_saturation=False, high_saturation_definition=None):
+    def validate_rgb_range(self, mode):
+        image_data = None
+        if mode == "nonmetallic":
+            image_data = np.array(self.albedo_validated, dtype=np.float32)
 
-        if self.albedo_image.mode == 'RGBA':
-            alpha = self.albedo_image.split()[-1]
-            self.albedo_validated = self.albedo_image.convert("RGB")
-        else:
-            alpha = None
-            self.albedo_validated = self.albedo_image.convert("RGB")
-
-        albedo_data = np.array(self.albedo_validated).astype(np.float32)
+        if mode == "metallic":
+            image_data = np.array(clip_metallic(self.albedo_validated), dtype=np.float32)
 
         if mode == "combined":
+            image_adjusted = clip_metallic(self.albedo_validated)
+            metallic_mask = self.metallic_image.split()[0]
+            albedo = self.albedo_image.convert("RGB")
+            albedo.paste(image_adjusted, (0, 0), metallic_mask)
+            image_data = np.array(albedo, dtype=np.float32)
 
-            metallic = self.metallic_image.convert("RGB")
-            metallic_data = np.array(metallic)
-            metallic_mask = (metallic_data < 128).any(axis=2)
+        if image_data is not None:
+            verified_data = verify_range(image_data)
+            self.albedo_validated = Image.fromarray(verified_data.astype('uint8'))
 
-            if is_saturation:
-                if high_saturation_definition is not None:
-                    max_albedo_value = albedo_data.max(axis=2)
-                    saturation_mask = (
-                            (max_albedo_value > 16) &
-                            ((max_albedo_value - albedo_data.min(
-                                axis=2)) / max_albedo_value < high_saturation_definition)
-                    )
+            mismatched_pixels = ((verified_data == [255, 0, 0]) | (verified_data == [0, 0, 255])).all(axis=2).sum()
+            return mismatched_pixels
 
-                    albedo_data = np.where((saturation_mask[..., None] & metallic_mask[..., None]) &
-                                           (albedo_data > self.RGB.max_nm).all(axis=-1)[..., None], (255, 0, 0), albedo_data)
-                    albedo_data = np.where((saturation_mask[..., None] & metallic_mask[..., None]) &
-                                           (albedo_data < self.RGB.min_nm).all(axis=-1)[..., None], (0, 0, 255), albedo_data)
-                    albedo_data = np.where(saturation_mask[..., None] & ~(metallic_mask[..., None]) &
-                                           (albedo_data > self.RGB.max_m).all(axis=-1)[..., None], (255, 0, 0), albedo_data)
-                    albedo_data = np.where(saturation_mask[..., None] & ~(metallic_mask[..., None]) &
-                                           (albedo_data < self.RGB.min_m).all(axis=-1)[..., None], (0, 0, 255), albedo_data)
-                    albedo_data = np.where((~saturation_mask[..., None] & metallic_mask[..., None]) &
-                                           (albedo_data > self.RGB.max_nm).all(axis=-1)[..., None], (255, 0, 0), albedo_data)
-                    albedo_data = np.where((~saturation_mask[..., None] & metallic_mask[..., None]) &
-                                           (albedo_data < self.RGB.min_nm).all(axis=-1)[..., None], (0, 0, 255), albedo_data)
-                    albedo_data = np.where(~saturation_mask[..., None] & ~(metallic_mask[..., None]) &
-                                           (albedo_data > self.RGB.max_m_hs).all(axis=-1)[..., None], (255, 0, 0),
-                                           albedo_data)
-                    albedo_data = np.where(~saturation_mask[..., None] & ~(metallic_mask[..., None]) &
-                                           (albedo_data < self.RGB.min_m_hs).all(axis=-1)[..., None], (0, 0, 255),
-                                           albedo_data)
-            else:
-                albedo_data = np.where((metallic_mask[..., None]) & (albedo_data > self.RGB.max_nm).all(axis=-1)[..., None],
-                                       (255, 0, 0), albedo_data)
-                albedo_data = np.where((metallic_mask[..., None]) & (albedo_data < self.RGB.min_nm).all(axis=-1)[..., None],
-                                       (0, 0, 255), albedo_data)
-                albedo_data = np.where(~(metallic_mask[..., None]) & (albedo_data > self.RGB.max_m).all(axis=-1)[..., None],
-                                       (255, 0, 0), albedo_data)
-                albedo_data = np.where(~(metallic_mask[..., None]) & (albedo_data < self.RGB.min_m).all(axis=-1)[..., None],
-                                       (0, 0, 255), albedo_data)
+        else:
+            return 0
 
-        elif mode == "metallic":
-            if is_saturation:
-                if high_saturation_definition is not None:
-                    max_albedo_value = albedo_data.max(axis=2)
-                    saturation_mask = (
-                            (max_albedo_value > 16) &
-                            ((max_albedo_value - albedo_data.min(
-                                axis=2)) / max_albedo_value < high_saturation_definition)
-                    )
-
-                    albedo_data = np.where(
-                        saturation_mask[..., None] & (albedo_data > self.RGB.max_m).all(axis=-1)[..., None], (255, 0, 0),
-                        albedo_data)
-                    albedo_data = np.where(
-                        saturation_mask[..., None] & (albedo_data < self.RGB.min_m).all(axis=-1)[..., None], (0, 0, 255),
-                        albedo_data)
-                    albedo_data = np.where(
-                        ~(saturation_mask[..., None]) & (albedo_data > self.RGB.max_m_hs).all(axis=-1)[..., None],
-                        (255, 0, 0), albedo_data)
-                    albedo_data = np.where(
-                        ~(saturation_mask[..., None]) & (albedo_data < self.RGB.min_m_hs).all(axis=-1)[..., None],
-                        (0, 0, 255), albedo_data)
-            else:
-                albedo_data = np.where((albedo_data > self.RGB.max_m).all(axis=-1)[..., None], (255, 0, 0), albedo_data)
-                albedo_data = np.where((albedo_data < self.RGB.min_m).all(axis=-1)[..., None], (0, 0, 255), albedo_data)
-
-        elif mode == "nonmetallic":
-            albedo_data = np.where((albedo_data > self.RGB.max_nm).all(axis=-1)[..., None], (255, 0, 0), albedo_data)
-            albedo_data = np.where((albedo_data < self.RGB.min_nm).all(axis=-1)[..., None], (0, 0, 255), albedo_data)
-
-        mismatched_pixels = ((albedo_data == [255, 0, 0]) | (albedo_data == [0, 0, 255])).all(axis=2).sum()
-
-        self.albedo_validated = Image.fromarray(albedo_data.astype('uint8'), mode="RGB")
-
-        if alpha:
-            self.albedo_validated.putalpha(alpha)
-
-        return mismatched_pixels
 
     def save(self, directory):
         if self.albedo_corrected is not None:
