@@ -1,16 +1,15 @@
 import os
 import shutil
-import subprocess
 import zipfile
 import requests
 import re
 
 from PyQt6 import uic
-from PyQt6.QtCore import Qt, QCoreApplication, QThread, pyqtSignal
+from PyQt6.QtCore import Qt, QCoreApplication, QThread, pyqtSignal, QEventLoop
 from PyQt6.QtGui import QFontDatabase
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel
 import sys
-
+from app import Application
 
 class UpdateThread(QThread):
     update_signal = pyqtSignal(str)
@@ -83,7 +82,6 @@ class UpdateWindow(QMainWindow):
 
     def exit(self):
         QCoreApplication.quit()
-        subprocess.run(['python', 'app.py'])
 
     def accept_update(self):
         self.label.setText("Starting Update...")
@@ -116,30 +114,37 @@ class UpdateWindow(QMainWindow):
         delta = event.pos() - self.old_pos
         self.move(self.pos() + delta)
 
+def run_application():
+    Application.run()
 
 if __name__ == "__main__":
     version_check_url = 'https://api.github.com/repos/smoothie-ws/CS2-Workshop-Tools-Additions/releases/latest'
 
-    response = requests.get(version_check_url)
-    response.raise_for_status()
-    data = response.json()
-    latest_version = data['tag_name']
-
     try:
-        from Tools.CFG import CFG
+        response = requests.get(version_check_url)
+        response.raise_for_status()
+        data = response.json()
+        latest_version = data['tag_name']
 
-        cfg = CFG("config.cfg")
-        current_version = cfg.version
+        try:
+            from Tools.CFG import CFG
+
+            cfg = CFG("config.cfg")
+            current_version = cfg.version
+        except Exception:
+            cfg = None
+            current_version = 0.0
+
+        if float(re.sub(r'[^\d.]', '', latest_version)) > float(current_version):
+
+            app = QApplication(sys.argv)
+            window = UpdateWindow()
+            window.show()
+            event_loop = QEventLoop(app)
+            event_loop.aboutToQuit.connect(run_application())
+            sys.exit(app.exec())
+        else:
+            run_application()
     except Exception:
-        cfg = None
-        current_version = 0.0
+        run_application()
 
-    if float(re.sub(r'[^\d.]', '', latest_version)) > float(current_version):
-
-        app = QApplication(sys.argv)
-        window = UpdateWindow()
-        window.show()
-        sys.exit(app.exec())
-
-    else:
-        exec(open('app.py').read())
