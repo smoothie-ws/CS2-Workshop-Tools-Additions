@@ -4,13 +4,17 @@ import sys
 from Tools.CFG import CFG
 
 
-app = QApplication(sys.argv)
+class Application:
 
-try:
-    cfg = CFG("config.cfg")
-    window = GUI(cfg)
-    print(cfg.version)
-except Exception:
-    window = GUI()
+    @staticmethod
+    def run():
+        app = QApplication(sys.argv)
 
-sys.exit(app.exec())
+        try:
+            cfg = CFG("config.cfg")
+            window = GUI(cfg)
+            print(cfg.version)
+        except Exception:
+            window = GUI()
+
+        sys.exit(app.exec())
