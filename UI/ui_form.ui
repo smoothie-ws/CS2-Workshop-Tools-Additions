@@ -204,7 +204,7 @@
       </rect>
      </property>
      <property name="text">
-      <string>CS2 Workshop Tools Additions v1.0</string>
+      <string>CS2 Workshop Tools Additions</string>
      </property>
      <property name="class" stdset="0">
       <string>titleText</string>

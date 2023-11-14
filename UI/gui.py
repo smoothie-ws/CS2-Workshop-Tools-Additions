@@ -13,7 +13,8 @@ import ctypes
 from ctypes.wintypes import DWORD, ULONG
 from ctypes import windll, c_bool, c_int, POINTER, Structure
 
-from Tools.PBR import PBRAlbedo
+from Tools.PBR import PBRSet
+
 
 class ACCENTPOLICY(Structure):
     _fields_ = [
@@ -180,7 +181,7 @@ class GUI(QMainWindow):
         self.setmetallic_button.clicked.connect(lambda: self.load_texture(self.metallic_icon, self.metallic_path_input))
         self.set_ao_button.clicked.connect(lambda: self.load_texture(self.ao_icon, self.ao_path_input))
         self.clamp_button.clicked.connect(self.correct_albedo)
-        self.validate_button.clicked.connect(self.validate_albedo)
+        self.validate_button.clicked.connect(self.verify_albedo)
         self.save_button.clicked.connect(self.save_textures)
         self.is_saturation_box.stateChanged.connect(self.hs_state_changed)
         self.finish_style_box.currentIndexChanged.connect(self.mode_changed)
@@ -271,10 +272,9 @@ class GUI(QMainWindow):
             else:
                 aomap = None
 
-            self.pbr_set = PBRAlbedo([self.nm_min, self.nm_max, self.m_min, self.m_max, self.mhs_min, self.mhs_max], albedomap, metallicmap, aomap)
+            self.pbr_set = PBRSet(albedomap, metallicmap)
 
-            self.pbr_set.clamp_rgb_range(self.mode, self.is_compensating, self.ao_coefficient.value(),
-                                         self.is_saturation_box.isChecked(), self.saturation_limit_box.value())
+            self.pbr_set.correct_albedo(self.mode, self.is_compensating)
 
             self.set_image(self.active_image_label, self.active_image_layout, 650, 650, self.pbr_set.albedo_corrected)
 
@@ -286,7 +286,7 @@ class GUI(QMainWindow):
         else:
             self.status_label.setText("Please make sure you have attached valid textures")
 
-    def validate_albedo(self):
+    def verify_albedo(self):
         valid_inputs = True
         if not (self.is_valid_image_path(self.albedo_path_input.text())):
             self.albedo_path_input.setStyleSheet("border-color: #a03c3c;")
@@ -304,11 +304,11 @@ class GUI(QMainWindow):
             else:
                 metallic_map_path = None
 
-            self.pbr_set = PBRAlbedo([self.nm_min, self.nm_max, self.m_min, self.m_max, self.mhs_min, self.mhs_max], albedo_map_path, metallic_map_path)
+            self.pbr_set = PBRSet(albedo_map_path, metallic_map_path)
 
-            mismatched_pixels = self.pbr_set.validate_rgb_range(self.mode)
+            mismatched_pixels = self.pbr_set.verify_albedo(self.mode)
 
-            self.set_image(self.active_image_label, self.active_image_layout, 650, 650, self.pbr_set.albedo_validated)
+            self.set_image(self.active_image_label, self.active_image_layout, 650, 650, self.pbr_set.albedo_verified)
             self.status_label.setText(f"{100 - round(mismatched_pixels / self.pbr_set.size() * 100)}% correct")
 
         else:
@@ -316,11 +316,11 @@ class GUI(QMainWindow):
 
     def save_textures(self):
         if self.pbr_set is not None:
-            if self.pbr_set.albedo_corrected is not None or self.pbr_set.ao_corrected is not None:
+            if self.pbr_set.albedo_corrected is not None or self.pbr_set.metallic_corrected is not None:
                 try:
                     directory = os.path.dirname(self.albedo_path_input.text())
-                    # selected_directory = QFileDialog.getExistingDirectory(self, "Select a directory", directory)
-                    self.pbr_set.save(directory)
+                    selected_directory = QFileDialog.getExistingDirectory(self, "Select a directory", directory)
+                    self.pbr_set.save(selected_directory, self.albedo_path_input.text())
                     self.status_label.setText("Successfully saved")
                 except Exception:
                     pass
