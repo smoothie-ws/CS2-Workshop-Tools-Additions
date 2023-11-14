@@ -140,6 +140,7 @@ if __name__ == "__main__":
             app = QApplication(sys.argv)
             window = UpdateWindow()
             window.show()
+            # ?
             event_loop = QEventLoop(app)
             event_loop.aboutToQuit.connect(run_application())
             sys.exit(app.exec())
