@@ -5,11 +5,13 @@ import requests
 import re
 
 from PyQt6 import uic
-from PyQt6.QtCore import Qt, QCoreApplication, QThread, pyqtSignal, QEventLoop
+from PyQt6.QtCore import Qt, QCoreApplication, QThread, pyqtSignal
 from PyQt6.QtGui import QFontDatabase
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel
 import sys
-from app import Application
+
+from UI.gui import GUI
+
 
 class UpdateThread(QThread):
     update_signal = pyqtSignal(str)
@@ -60,6 +62,7 @@ class UpdateThread(QThread):
         except Exception:
             self.update_signal.emit("Done")
 
+
 class UpdateWindow(QMainWindow):
     def __init__(self):
         super(UpdateWindow, self).__init__()
@@ -97,7 +100,7 @@ class UpdateWindow(QMainWindow):
             cfg.version = float(re.sub(r'[^\d.]', '', latest_version))
             cfg.write()
 
-            self.exit()
+            QCoreApplication.quit()
 
     def mousePressEvent(self, event):
         if event.button() == Qt.MouseButton.LeftButton:
@@ -114,8 +117,19 @@ class UpdateWindow(QMainWindow):
         delta = event.pos() - self.old_pos
         self.move(self.pos() + delta)
 
+
 def run_application():
-    Application.run()
+
+    app = QApplication(sys.argv)
+
+    try:
+        cfg = CFG("config.cfg")
+        window = GUI(cfg)
+    except Exception:
+        window = GUI()
+
+    sys.exit(app.exec())
+
 
 if __name__ == "__main__":
     version_check_url = 'https://api.github.com/repos/smoothie-ws/CS2-Workshop-Tools-Additions/releases/latest'
@@ -136,14 +150,25 @@ if __name__ == "__main__":
             current_version = 0.0
 
         if float(re.sub(r'[^\d.]', '', latest_version)) > float(current_version):
-
             app = QApplication(sys.argv)
             window = UpdateWindow()
+
+            try:
+                from Tools.CFG import CFG
+                cfg = CFG("config.cfg")
+                app_window = GUI(cfg)
+                app_window.hide()
+            except Exception:
+                app_window = GUI()
+                app_window.hide()
+
             window.show()
             app.exec()
-            run_application()
+
+            app_window.show()
+            app.exec()
         else:
             run_application()
+
     except Exception:
         run_application()
-
