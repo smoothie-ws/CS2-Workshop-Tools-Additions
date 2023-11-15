@@ -309,17 +309,55 @@
     <property name="class" stdset="0">
      <string>plane</string>
     </property>
-    <widget class="QGroupBox" name="aoGroup">
+    <widget class="QPushButton" name="saveButton">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>420</y>
+       <width>191</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
+     <property name="text">
+      <string>Save corrected textures</string>
+     </property>
+     <property name="class" stdset="0">
+      <string>mainButton</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="defaultsButton">
+     <property name="geometry">
+      <rect>
+       <x>80</x>
+       <y>380</y>
+       <width>131</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="cursor">
+      <cursorShape>PointingHandCursor</cursorShape>
+     </property>
+     <property name="text">
+      <string>Save as defaults</string>
+     </property>
+     <property name="class" stdset="0">
+      <string>regularButton</string>
+     </property>
+    </widget>
+    <widget class="QGroupBox" name="rgbrangeGroup">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>300</y>
-       <width>271</width>
+       <y>250</y>
+       <width>261</width>
        <height>121</height>
       </rect>
      </property>
      <property name="title">
-      <string>AO map</string>
+      <string>Advanced settings</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignJustify|Qt::AlignVCenter</set>
@@ -330,10 +368,178 @@
      <property name="class" stdset="0">
       <string>group</string>
      </property>
-     <widget class="QToolButton" name="setaoButton">
+     <widget class="QLabel" name="nmrangeLabel">
       <property name="geometry">
        <rect>
-        <x>240</x>
+        <x>10</x>
+        <y>45</y>
+        <width>111</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Luminance limits:</string>
+      </property>
+      <property name="class" stdset="0">
+       <string>regularText</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="mrangeLabel">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>85</y>
+        <width>181</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Brightness treshold:</string>
+      </property>
+      <property name="class" stdset="0">
+       <string>regularText</string>
+      </property>
+     </widget>
+     <widget class="QSpinBox" name="nmminBox">
+      <property name="geometry">
+       <rect>
+        <x>150</x>
+        <y>45</y>
+        <width>45</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="minimum">
+       <number>1</number>
+      </property>
+      <property name="maximum">
+       <number>254</number>
+      </property>
+      <property name="value">
+       <number>8</number>
+      </property>
+      <property name="class" stdset="0">
+       <string>spinBox</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="nmrangeLabel_2">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>20</y>
+        <width>31</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>min</string>
+      </property>
+      <property name="class" stdset="0">
+       <string>regularText</string>
+      </property>
+     </widget>
+     <widget class="QSpinBox" name="nmmaxBox">
+      <property name="geometry">
+       <rect>
+        <x>210</x>
+        <y>45</y>
+        <width>45</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="minimum">
+       <number>1</number>
+      </property>
+      <property name="maximum">
+       <number>254</number>
+      </property>
+      <property name="value">
+       <number>235</number>
+      </property>
+      <property name="class" stdset="0">
+       <string>spinBox</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="nmrangeLabel_3">
+      <property name="geometry">
+       <rect>
+        <x>220</x>
+        <y>20</y>
+        <width>31</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>max</string>
+      </property>
+      <property name="class" stdset="0">
+       <string>regularText</string>
+      </property>
+     </widget>
+     <widget class="QSpinBox" name="mmaxBox">
+      <property name="geometry">
+       <rect>
+        <x>150</x>
+        <y>85</y>
+        <width>45</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="minimum">
+       <number>1</number>
+      </property>
+      <property name="maximum">
+       <number>254</number>
+      </property>
+      <property name="value">
+       <number>70</number>
+      </property>
+      <property name="class" stdset="0">
+       <string>spinBox</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="rgbinfoLink">
+      <property name="geometry">
+       <rect>
+        <x>250</x>
+        <y>2</y>
+        <width>16</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>&lt;a style=&quot;color: #4979a0; text-decoration: none;&quot; href=&quot;https://www.artstation.com/blogs/shinsoj/Q9j6/pbr-color-space-conversion-and-albedo-chart&quot;&gt;?&lt;/a&gt;</string>
+      </property>
+      <property name="class" stdset="0">
+       <string>regularText</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QGroupBox" name="metallicGroup">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>160</y>
+       <width>261</width>
+       <height>81</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Material mask</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignJustify|Qt::AlignVCenter</set>
+     </property>
+     <property name="checkable">
+      <bool>false</bool>
+     </property>
+     <property name="class" stdset="0">
+      <string>group</string>
+     </property>
+     <widget class="QToolButton" name="setmetallicButton">
+      <property name="geometry">
+       <rect>
+        <x>230</x>
         <y>40</y>
         <width>25</width>
         <height>25</height>
@@ -352,17 +558,14 @@
        <string>regularButton</string>
       </property>
      </widget>
-     <widget class="QLineEdit" name="aoPathInput">
+     <widget class="QLineEdit" name="metallicPathInput">
       <property name="geometry">
        <rect>
         <x>50</x>
         <y>40</y>
-        <width>181</width>
+        <width>171</width>
         <height>25</height>
        </rect>
-      </property>
-      <property name="text">
-       <string/>
       </property>
       <property name="placeholderText">
        <string>Filepath</string>
@@ -371,7 +574,7 @@
        <string>textInput</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="aoIcon">
+     <widget class="QPushButton" name="metallicIcon">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -413,74 +616,14 @@
        <string>textureIcon</string>
       </property>
      </widget>
-     <widget class="QDoubleSpinBox" name="coefficientValue">
-      <property name="geometry">
-       <rect>
-        <x>215</x>
-        <y>90</y>
-        <width>51</width>
-        <height>22</height>
-       </rect>
-      </property>
-      <property name="minimum">
-       <double>0.100000000000000</double>
-      </property>
-      <property name="maximum">
-       <double>2.000000000000000</double>
-      </property>
-      <property name="singleStep">
-       <double>0.100000000000000</double>
-      </property>
-      <property name="value">
-       <double>1.600000000000000</double>
-      </property>
-      <property name="class" stdset="0">
-       <string>spinBox</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="coefficientLabel">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>90</y>
-        <width>191</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Coefficient:</string>
-      </property>
-      <property name="class" stdset="0">
-       <string>regularText</string>
-      </property>
-     </widget>
-    </widget>
-    <widget class="QPushButton" name="saveButton">
-     <property name="geometry">
-      <rect>
-       <x>50</x>
-       <y>650</y>
-       <width>191</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="cursor">
-      <cursorShape>PointingHandCursor</cursorShape>
-     </property>
-     <property name="text">
-      <string>Save corrected textures</string>
-     </property>
-     <property name="class" stdset="0">
-      <string>mainButton</string>
-     </property>
     </widget>
     <widget class="QGroupBox" name="albedoGroup">
      <property name="geometry">
       <rect>
        <x>10</x>
        <y>10</y>
-       <width>271</width>
-       <height>111</height>
+       <width>261</width>
+       <height>141</height>
       </rect>
      </property>
      <property name="title">
@@ -498,7 +641,7 @@
      <widget class="QToolButton" name="setalbedoButton">
       <property name="geometry">
        <rect>
-        <x>240</x>
+        <x>230</x>
         <y>40</y>
         <width>25</width>
         <height>25</height>
@@ -522,7 +665,7 @@
        <rect>
         <x>49</x>
         <y>40</y>
-        <width>181</width>
+        <width>171</width>
         <height>25</height>
        </rect>
       </property>
@@ -578,8 +721,8 @@
      <widget class="QPushButton" name="validateButton">
       <property name="geometry">
        <rect>
-        <x>190</x>
-        <y>80</y>
+        <x>180</x>
+        <y>110</y>
         <width>75</width>
         <height>23</height>
        </rect>
@@ -598,7 +741,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>80</y>
+        <y>110</y>
         <width>75</width>
         <height>23</height>
        </rect>
@@ -613,80 +756,23 @@
        <string>mainButton</string>
       </property>
      </widget>
-    </widget>
-    <widget class="QGroupBox" name="metallicGroup">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>130</y>
-       <width>271</width>
-       <height>141</height>
-      </rect>
-     </property>
-     <property name="title">
-      <string>Material mask</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignJustify|Qt::AlignVCenter</set>
-     </property>
-     <property name="checkable">
-      <bool>false</bool>
-     </property>
-     <property name="class" stdset="0">
-      <string>group</string>
-     </property>
-     <widget class="QToolButton" name="setmetallicButton">
-      <property name="geometry">
-       <rect>
-        <x>240</x>
-        <y>40</y>
-        <width>25</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="cursor">
-       <cursorShape>PointingHandCursor</cursorShape>
-      </property>
-      <property name="focusPolicy">
-       <enum>Qt::StrongFocus</enum>
-      </property>
-      <property name="text">
-       <string>...</string>
-      </property>
-      <property name="class" stdset="0">
-       <string>regularButton</string>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="metallicPathInput">
-      <property name="geometry">
-       <rect>
-        <x>50</x>
-        <y>40</y>
-        <width>181</width>
-        <height>25</height>
-       </rect>
-      </property>
-      <property name="placeholderText">
-       <string>Filepath</string>
-      </property>
-      <property name="class" stdset="0">
-       <string>textInput</string>
-      </property>
-     </widget>
-     <widget class="QCheckBox" name="isSaturationBox">
+     <widget class="QCheckBox" name="iscompensatingBox">
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>90</y>
-        <width>231</width>
+        <y>80</y>
+        <width>261</width>
         <height>17</height>
        </rect>
       </property>
       <property name="cursor">
        <cursorShape>PointingHandCursor</cursorShape>
       </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
       <property name="text">
-       <string>Consider high saturated colors</string>
+       <string>Compensate for luminance clamp</string>
       </property>
       <property name="checked">
        <bool>true</bool>
@@ -695,362 +781,6 @@
        <string>checkBox</string>
       </property>
      </widget>
-     <widget class="QDoubleSpinBox" name="saturationValue">
-      <property name="geometry">
-       <rect>
-        <x>215</x>
-        <y>110</y>
-        <width>51</width>
-        <height>22</height>
-       </rect>
-      </property>
-      <property name="maximum">
-       <double>1.000000000000000</double>
-      </property>
-      <property name="singleStep">
-       <double>0.100000000000000</double>
-      </property>
-      <property name="value">
-       <double>0.500000000000000</double>
-      </property>
-      <property name="class" stdset="0">
-       <string>spinBox</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="metallicIcon">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>35</y>
-        <width>35</width>
-        <height>35</height>
-       </rect>
-      </property>
-      <property name="cursor">
-       <cursorShape>ArrowCursor</cursorShape>
-      </property>
-      <property name="focusPolicy">
-       <enum>Qt::NoFocus</enum>
-      </property>
-      <property name="inputMethodHints">
-       <set>Qt::ImhHiddenText</set>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-      <property name="icon">
-       <iconset>
-        <normaloff>icons/emptyimage_icon.png</normaloff>
-        <disabledoff>icons/emptyimage_disabled_icon.png</disabledoff>icons/emptyimage_icon.png</iconset>
-      </property>
-      <property name="iconSize">
-       <size>
-        <width>35</width>
-        <height>35</height>
-       </size>
-      </property>
-      <property name="checked">
-       <bool>false</bool>
-      </property>
-      <property name="flat">
-       <bool>false</bool>
-      </property>
-      <property name="class" stdset="0">
-       <string>textureIcon</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="saturationLabel">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>110</y>
-        <width>191</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Saturation value limit:</string>
-      </property>
-      <property name="class" stdset="0">
-       <string>regularText</string>
-      </property>
-     </widget>
-    </widget>
-    <widget class="QCheckBox" name="isAoBox">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>280</y>
-       <width>231</width>
-       <height>17</height>
-      </rect>
-     </property>
-     <property name="cursor">
-      <cursorShape>PointingHandCursor</cursorShape>
-     </property>
-     <property name="layoutDirection">
-      <enum>Qt::LeftToRight</enum>
-     </property>
-     <property name="text">
-      <string>Compensate for lightening</string>
-     </property>
-     <property name="checked">
-      <bool>true</bool>
-     </property>
-     <property name="class" stdset="0">
-      <string>checkBox</string>
-     </property>
-    </widget>
-    <widget class="QGroupBox" name="rgbrangeGroup">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>430</y>
-       <width>271</width>
-       <height>161</height>
-      </rect>
-     </property>
-     <property name="title">
-      <string>RGB range</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignJustify|Qt::AlignVCenter</set>
-     </property>
-     <property name="checkable">
-      <bool>false</bool>
-     </property>
-     <property name="class" stdset="0">
-      <string>group</string>
-     </property>
-     <widget class="QLabel" name="nmrangeLabel">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>45</y>
-        <width>101</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Nonmetallic:</string>
-      </property>
-      <property name="class" stdset="0">
-       <string>regularText</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="mrangeLabel">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>85</y>
-        <width>111</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Metallic:</string>
-      </property>
-      <property name="class" stdset="0">
-       <string>regularText</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="mhsrangeLabel">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>125</y>
-        <width>151</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>High saturated:</string>
-      </property>
-      <property name="class" stdset="0">
-       <string>regularText</string>
-      </property>
-     </widget>
-     <widget class="QSpinBox" name="nmminBox">
-      <property name="geometry">
-       <rect>
-        <x>150</x>
-        <y>45</y>
-        <width>51</width>
-        <height>22</height>
-       </rect>
-      </property>
-      <property name="maximum">
-       <number>255</number>
-      </property>
-      <property name="value">
-       <number>55</number>
-      </property>
-      <property name="class" stdset="0">
-       <string>spinBox</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="nmrangeLabel_2">
-      <property name="geometry">
-       <rect>
-        <x>160</x>
-        <y>20</y>
-        <width>31</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>min</string>
-      </property>
-      <property name="class" stdset="0">
-       <string>regularText</string>
-      </property>
-     </widget>
-     <widget class="QSpinBox" name="nmmaxBox">
-      <property name="geometry">
-       <rect>
-        <x>210</x>
-        <y>45</y>
-        <width>51</width>
-        <height>22</height>
-       </rect>
-      </property>
-      <property name="maximum">
-       <number>255</number>
-      </property>
-      <property name="value">
-       <number>220</number>
-      </property>
-      <property name="class" stdset="0">
-       <string>spinBox</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="nmrangeLabel_3">
-      <property name="geometry">
-       <rect>
-        <x>220</x>
-        <y>20</y>
-        <width>31</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>max</string>
-      </property>
-      <property name="class" stdset="0">
-       <string>regularText</string>
-      </property>
-     </widget>
-     <widget class="QSpinBox" name="mminBox">
-      <property name="geometry">
-       <rect>
-        <x>150</x>
-        <y>85</y>
-        <width>51</width>
-        <height>22</height>
-       </rect>
-      </property>
-      <property name="maximum">
-       <number>255</number>
-      </property>
-      <property name="value">
-       <number>180</number>
-      </property>
-      <property name="class" stdset="0">
-       <string>spinBox</string>
-      </property>
-     </widget>
-     <widget class="QSpinBox" name="mmaxBox">
-      <property name="geometry">
-       <rect>
-        <x>210</x>
-        <y>85</y>
-        <width>51</width>
-        <height>22</height>
-       </rect>
-      </property>
-      <property name="maximum">
-       <number>255</number>
-      </property>
-      <property name="value">
-       <number>250</number>
-      </property>
-      <property name="class" stdset="0">
-       <string>spinBox</string>
-      </property>
-     </widget>
-     <widget class="QSpinBox" name="mhsminBox">
-      <property name="geometry">
-       <rect>
-        <x>150</x>
-        <y>125</y>
-        <width>51</width>
-        <height>22</height>
-       </rect>
-      </property>
-      <property name="maximum">
-       <number>255</number>
-      </property>
-      <property name="value">
-       <number>90</number>
-      </property>
-      <property name="class" stdset="0">
-       <string>spinBox</string>
-      </property>
-     </widget>
-     <widget class="QSpinBox" name="mhsmaxBox">
-      <property name="geometry">
-       <rect>
-        <x>210</x>
-        <y>125</y>
-        <width>51</width>
-        <height>22</height>
-       </rect>
-      </property>
-      <property name="maximum">
-       <number>255</number>
-      </property>
-      <property name="value">
-       <number>250</number>
-      </property>
-      <property name="class" stdset="0">
-       <string>spinBox</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="rgbinfoLink">
-      <property name="geometry">
-       <rect>
-        <x>260</x>
-        <y>2</y>
-        <width>16</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>&lt;a style=&quot;color: #4979a0; text-decoration: none;&quot; href=&quot;https://www.counter-strike.net/workshop/workshopfinishes#pr&quot;&gt;?&lt;/a&gt;</string>
-      </property>
-      <property name="class" stdset="0">
-       <string>regularText</string>
-      </property>
-     </widget>
-    </widget>
-    <widget class="QPushButton" name="defaultsButton">
-     <property name="geometry">
-      <rect>
-       <x>80</x>
-       <y>600</y>
-       <width>131</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="cursor">
-      <cursorShape>PointingHandCursor</cursorShape>
-     </property>
-     <property name="text">
-      <string>Save as defaults</string>
-     </property>
-     <property name="class" stdset="0">
-      <string>regularButton</string>
-     </property>
     </widget>
    </widget>
    <widget class="QWidget" name="image_plane" native="true">

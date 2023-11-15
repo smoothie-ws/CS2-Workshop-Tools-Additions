@@ -133,15 +133,13 @@ class PBRSet:
         else:
             return 0
 
-    def save(self, directory, albedo_path=None, metallic_path=None):
-        if self.albedo_corrected is not None and albedo_path is not None:
-            albedo_filename, albedo_extension = os.path.splitext(os.path.basename(albedo_path))
-            albedo_file_path = directory + "/" + albedo_filename + "_corrected" + albedo_extension
+    def save(self, directory):
+        folder = os.path.splitext(os.path.basename(directory))
+        if self.albedo_corrected is not None:
+            albedo_file_path = directory + "/" + folder[0] + "_corrected" + ".tga"
             self.albedo_corrected.save(albedo_file_path)
-
-        if self.metallic_corrected is not None and metallic_path is not None:
-            metallic_filename, metallic_extension = os.path.splitext(os.path.basename(metallic_path))
-            metallic_file_path = directory + "/" + metallic_filename + "_corrected" + metallic_extension
+        if self.metallic_corrected is not None:
+            metallic_file_path = directory + "/" + folder[0] + "_corrected" + ".tga"
             self.metallic_corrected.save(metallic_file_path)
 
     def size(self):
