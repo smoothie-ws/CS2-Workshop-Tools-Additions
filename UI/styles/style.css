@@ -126,9 +126,37 @@
 	font-weight: 600;
 	line-height: normal;
 }
+
 .mainButton:hover {
 	background: #75b9e6;
 	color: rgb(224, 224, 224);
+}
+
+.mainButton:disabled {
+	background: #234258;
+	color: rgba(224, 224, 224, 0.404);
+}
+
+.mainButton2 {
+	border-radius: 5px;
+	background: #8b3eb8;
+	color: rgb(195, 210, 223);
+	text-align: center;
+	font-family: Rubik;
+	font-size: 13px;
+	font-style: normal;
+	font-weight: 600;
+	line-height: normal;
+}
+
+.mainButton2:hover {
+	background: #d375e6;
+	color: rgb(224, 224, 224);
+}
+
+.mainButton2:disabled {
+	background: #562358;
+	color: rgba(224, 224, 224, 0.404);
 }
 
 .comboBox {

@@ -13,6 +13,7 @@ import ctypes
 from ctypes.wintypes import DWORD, ULONG
 from ctypes import windll, c_bool, c_int, POINTER, Structure
 
+from Tools.CFG import CFG
 from Tools.PBR import PBRSet
 
 
@@ -39,12 +40,10 @@ SetWindowCompositionAttribute.argtypes = [c_int, POINTER(WINCOMPATTRDATA)]
 
 
 class GUI(QMainWindow):
-    def __init__(self, cfg=None):
+    def __init__(self):
         super().__init__()
         self.setFixedSize(1024, 768)
         self.blur_background()
-        self.cfg = cfg
-
         self.pbr_set = None
         self.load_cfg()
 
@@ -55,41 +54,29 @@ class GUI(QMainWindow):
         self.show()
 
     def load_cfg(self):
-        if self.cfg is not None:
-            self.finish_style = self.cfg.finish_style
-            self.mode = self.cfg.mode
-            self.saturation_value = self.cfg.saturation_value
-            self.is_compensating = self.cfg.is_compensating
-            self.compensation_coefficient = self.cfg.compensation_coefficient
-            self.nm_min = self.cfg.nm_min
-            self.nm_max = self.cfg.nm_max
-            self.m_max = self.cfg.m_max
-
-        else:
-            self.finish_style = "Gunsmith"
-            self.mode = "combined"
-            self.saturation_value = 0.5
-            self.is_compensating = True
-            self.compensation_coefficient = 1.5
-            self.nm_min = 55
-            self.nm_max = 220
-            self.m_max = 250
+        cfg = CFG("config.cfg")
+        self.finish_style = cfg.finish_style
+        self.mode = cfg.mode
+        self.is_compensating = cfg.is_compensating
+        self.compensation_coefficient = cfg.compensation_coefficient
+        self.l_min = 8
+        self.l_max = 235
+        self.b_limit = 70
 
     def write_cfg(self):
-        if self.cfg is not None:
-            self.cfg.finish_style = self.finish_style
-            self.cfg.mode = self.mode
-            self.cfg.saturation_value = self.saturation_value
-            self.cfg.is_compensating = self.is_compensating
-            self.cfg.compensation_coefficient = self.compensation_coefficient
-            self.cfg.nm_min = self.nm_min
-            self.cfg.nm_max = self.nm_max
-            self.cfg.m_min = self.m_min
-            self.cfg.m_max = self.m_max
+        cfg = CFG("config.cfg")
 
-            self.cfg.write()
+        cfg.finish_style = self.finish_style
+        cfg.mode = self.mode
+        cfg.is_compensating = self.is_compensating
+        cfg.compensation_coefficient = self.compensation_coefficient
+        cfg.l_min = self.l_min
+        cfg.l_max = self.l_max
+        cfg.b_limit = self.b_limit
 
-            self.status_label.setText("Default settings have been rewritten")
+        cfg.write()
+
+        self.status_label.setText("Default settings have been rewritten")
 
     def blur_background(self):
         self.setWindowFlag(Qt.WindowType.FramelessWindowHint)
@@ -114,36 +101,40 @@ class GUI(QMainWindow):
                            Image.open('UI/background.png'), False)
 
     def setup_widgets(self):
-        self.setalbedo_button = self.findChild(QToolButton, 'setalbedoButton')
-        self.setmetallic_button = self.findChild(QToolButton, 'setmetallicButton')
-        self.clamp_button = self.findChild(QPushButton, 'clampButton')
-        self.validate_button = self.findChild(QPushButton, 'validateButton')
-        self.save_button = self.findChild(QPushButton, 'saveButton')
-        self.status_label = self.findChild(QLabel, 'statusLabel')
-        self.albedo_path_input = self.findChild(QLineEdit, 'albedoPathInput')
-        self.metallic_path_input = self.findChild(QLineEdit, 'metallicPathInput')
-        self.metallic_path_input = self.findChild(QLineEdit, 'metallicPathInput')
-        self.finish_style_box = self.findChild(QComboBox, 'finishStyleBox')
-        self.is_compensating_box = self.findChild(QCheckBox, 'iscompensatingBox')
-        self.saturation_limit_label = self.findChild(QLabel, 'saturationLabel')
-        self.nm_range_label = self.findChild(QLabel, 'nmrangeLabel')
-        self.m_range_label = self.findChild(QLabel, 'mrangeLabel')
-        self.albedo_group = self.findChild(QGroupBox, 'albedoGroup')
-        self.metallic_group = self.findChild(QGroupBox, 'metallicGroup')
-        self.saturation_limit_box = self.findChild(QDoubleSpinBox, 'saturationValue')
-        self.nm_min_box = self.findChild(QSpinBox, 'nmminBox')
-        self.nm_max_box = self.findChild(QSpinBox, 'nmmaxBox')
-        self.m_max_box = self.findChild(QSpinBox, 'mmaxBox')
-        self.mode_box = self.findChild(QComboBox, 'finishStyleBox')
-        self.albedo_icon = self.findChild(QPushButton, 'albedoIcon')
-        self.metallic_icon = self.findChild(QPushButton, 'metallicIcon')
-        self.author_label = self.findChild(QLabel, 'authorLabel')
-        self.author_label.setOpenExternalLinks(True)
-        self.rgb_info_label = self.findChild(QLabel, 'rgbinfoLink')
-        self.rgb_info_label.setOpenExternalLinks(True)
         self.exit_button = self.findChild(QPushButton, 'exitButton')
         self.min_button = self.findChild(QPushButton, 'minButton')
+        self.author_label = self.findChild(QLabel, 'authorLabel')
+        self.author_label.setOpenExternalLinks(True)
+
+        self.status_label = self.findChild(QLabel, 'statusLabel')
+        self.finish_style_box = self.findChild(QComboBox, 'finishStyleBox')
+
+        self.albedo_group = self.findChild(QGroupBox, 'albedoGroup')
+        self.albedo_icon = self.findChild(QPushButton, 'albedoIcon')
+        self.setalbedo_button = self.findChild(QToolButton, 'setalbedoButton')
+        self.albedo_path_input = self.findChild(QLineEdit, 'albedoPathInput')
+
+        self.is_compensating_box = self.findChild(QCheckBox, 'iscompensatingBox')
+        self.compensating_coefficient_box = self.findChild(QDoubleSpinBox, 'coefficientBox')
+
+        self.correct_button = self.findChild(QPushButton, 'correctButton')
+        self.verify_button = self.findChild(QPushButton, 'verifyButton')
+
+        self.metallic_group = self.findChild(QGroupBox, 'metallicGroup')
+        self.metallic_icon = self.findChild(QPushButton, 'metallicIcon')
+        self.setmetallic_button = self.findChild(QToolButton, 'setmetallicButton')
+        self.metallic_path_input = self.findChild(QLineEdit, 'metallicPathInput')
+
         self.defaults_button = self.findChild(QPushButton, 'defaultsButton')
+        self.save_button = self.findChild(QPushButton, 'saveButton')
+        self.luminance_label = self.findChild(QLabel, 'luminanceLabel')
+        self.brightness_label = self.findChild(QLabel, 'brightnessLabel')
+        self.l_min_box = self.findChild(QSpinBox, 'lminBox')
+        self.l_max_box = self.findChild(QSpinBox, 'lmaxBox')
+        self.b_limit_box = self.findChild(QSpinBox, 'blimitBox')
+
+        self.info_link = self.findChild(QLabel, 'infoLink')
+        self.info_link.setOpenExternalLinks(True)
 
         self.background = self.findChild(QWidget, 'background')
         self.background_layout = QVBoxLayout(self.background)
@@ -159,23 +150,23 @@ class GUI(QMainWindow):
 
         self.setalbedo_button.clicked.connect(lambda: self.load_texture(self.albedo_icon, self.albedo_path_input, True))
         self.setmetallic_button.clicked.connect(lambda: self.load_texture(self.metallic_icon, self.metallic_path_input))
-        self.clamp_button.clicked.connect(self.correct_albedo)
-        self.validate_button.clicked.connect(self.verify_albedo)
+        self.correct_button.clicked.connect(self.correct_albedo)
+        self.verify_button.clicked.connect(self.verify_albedo)
         self.save_button.clicked.connect(self.save_textures)
         self.finish_style_box.currentIndexChanged.connect(self.mode_changed)
         self.is_compensating_box.stateChanged.connect(self.compensating_state_changed)
         self.exit_button.clicked.connect(self.exit_app)
         self.min_button.clicked.connect(self.min_app)
-        self.nm_min_box.valueChanged.connect(self.range_changed)
-        self.nm_max_box.valueChanged.connect(self.range_changed)
-        self.m_max_box.valueChanged.connect(self.range_changed)
+        self.l_min_box.valueChanged.connect(self.range_changed)
+        self.l_max_box.valueChanged.connect(self.range_changed)
+        self.b_limit_box.valueChanged.connect(self.range_changed)
         self.defaults_button.clicked.connect(self.write_cfg)
 
         self.finish_style_box.setCurrentText(self.finish_style)
         self.is_compensating_box.setEnabled(self.is_compensating)
-        self.nm_min_box.setValue(self.nm_min)
-        self.nm_max_box.setValue(self.nm_max)
-        self.m_max_box.setValue(self.m_max)
+        self.l_min_box.setValue(self.l_min)
+        self.l_max_box.setValue(self.l_max)
+        self.b_limit_box.setValue(self.b_limit)
 
     def set_image(self, label, layout, width, height, image, remove_alpha=True):
         try:
@@ -203,7 +194,8 @@ class GUI(QMainWindow):
     def load_texture(self, icon, texture_input, is_set_image=False):
         texture_input.setStyleSheet("border-color: #343434;")
         try:
-            filepath = QFileDialog.getOpenFileName(self, 'Open File', 'C:/', 'Image (*.tga;*.png;*.jpg;*.jpeg;*.jp2;*.bmp)')
+            filepath = QFileDialog.getOpenFileName(self, 'Open File', 'C:/',
+                                                   'Image (*.tga;*.png;*.jpg;*.jpeg;*.jp2;*.bmp)')
 
             if filepath[0] != "":
                 texture_input.setText(filepath[0])
@@ -291,6 +283,7 @@ class GUI(QMainWindow):
 
     def compensating_state_changed(self):
         self.is_compensating = self.is_compensating_box.isChecked()
+        self.compensating_coefficient_box.setEnabled(self.is_compensating)
 
     def mode_changed(self):
         self.finish_style = self.finish_style_box.currentText()
@@ -298,71 +291,43 @@ class GUI(QMainWindow):
         if self.finish_style == "Gunsmith":
             self.mode = "combined"
             self.albedo_group.setEnabled(True)
-            self.metallic_group.setEnabled(True)
             self.is_compensating_box.setEnabled(True)
-            self.metallic_icon.setEnabled(True)
-            self.setmetallic_button.setEnabled(True)
-            self.metallic_path_input.setEnabled(True)
-            self.nm_range_label.setEnabled(True)
-            self.m_range_label.setEnabled(True)
-            self.nm_min_box.setEnabled(True)
-            self.nm_max_box.setEnabled(True)
-            self.m_max_box.setEnabled(True)
+            self.compensating_coefficient_box.setEnabled(self.is_compensating)
+            self.metallic_group.setEnabled(True)
+            self.luminance_label.setEnabled(True)
+            self.brightness_label.setEnabled(True)
+            self.l_min_box.setEnabled(True)
+            self.l_max_box.setEnabled(True)
+            self.b_limit_box.setEnabled(True)
 
-        if self.finish_style == "Custom Paint Job":
-            self.mode = "nonmetallic"
+        if self.finish_style == "Patina" or "Anodized Multicolored":
+            self.mode = "metallic"
             self.albedo_group.setEnabled(True)
+            self.is_compensating_box.setEnabled(True)
+            self.compensating_coefficient_box.setEnabled(self.is_compensating)
             self.metallic_group.setEnabled(False)
-            self.is_compensating_box.setEnabled(True)
-            self.nm_range_label.setEnabled(True)
-            self.m_range_label.setEnabled(False)
-            self.nm_min_box.setEnabled(True)
-            self.nm_max_box.setEnabled(True)
-            self.m_max_box.setEnabled(False)
+            self.luminance_label.setEnabled(True)
+            self.brightness_label.setEnabled(True)
+            self.l_min_box.setEnabled(False)
+            self.l_max_box.setEnabled(False)
+            self.b_limit_box.setEnabled(True)
 
-        if self.finish_style == "Patina":
-            self.mode = "metallic"
-            self.albedo_group.setEnabled(True)
-            self.metallic_group.setEnabled(True)
-            self.is_compensating_box.setEnabled(True)
-            self.metallic_icon.setEnabled(False)
-            self.setmetallic_button.setEnabled(False)
-            self.metallic_path_input.setEnabled(False)
-            self.nm_range_label.setEnabled(False)
-            self.m_range_label.setEnabled(True)
-            self.nm_min_box.setEnabled(False)
-            self.nm_max_box.setEnabled(False)
-            self.m_max_box.setEnabled(True)
-
-        if self.finish_style == "Anodized Multicolored":
-            self.mode = "metallic"
-            self.albedo_group.setEnabled(True)
-            self.metallic_group.setEnabled(True)
-            self.metallic_icon.setEnabled(False)
-            self.setmetallic_button.setEnabled(False)
-            self.metallic_path_input.setEnabled(False)
-            self.is_compensating_box.setEnabled(False)
-            self.nm_range_label.setEnabled(False)
-            self.m_range_label.setEnabled(True)
-            self.nm_min_box.setEnabled(False)
-            self.nm_max_box.setEnabled(False)
-            self.m_max_box.setEnabled(True)
-
-        if self.finish_style in ["Spray-Paint", "Hydrographic", "Anodized", "Anodized Airbrushed"]:
+        if self.finish_style in ["Custom Paint Job", "Spray-Paint", "Hydrographic", "Anodized", "Anodized Airbrushed"]:
             self.mode = "nonmetallic"
             self.albedo_group.setEnabled(True)
             self.metallic_group.setEnabled(False)
             self.is_compensating_box.setEnabled(False)
-            self.nm_range_label.setEnabled(True)
-            self.m_range_label.setEnabled(False)
-            self.nm_min_box.setEnabled(True)
-            self.nm_max_box.setEnabled(True)
-            self.m_max_box.setEnabled(False)
+            self.compensating_coefficient_box.setEnabled(False)
+            self.luminance_label.setEnabled(True)
+            self.brightness_label.setEnabled(False)
+            self.l_min_box.setEnabled(True)
+            self.l_max_box.setEnabled(True)
+            self.b_limit_box.setEnabled(False)
 
     def range_changed(self):
-        self.nm_min = self.nm_min_box.value()
-        self.nm_max = self.nm_max_box.value()
-        self.m_max = self.m_max_box.value()
+        self.l_min = self.l_min_box.value()
+        self.l_max = self.l_max_box.value()
+        self.b_limit = self.b_limit_box.value()
 
     @staticmethod
     def exit_app():

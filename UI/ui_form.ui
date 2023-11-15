@@ -213,7 +213,7 @@
     <widget class="QLabel" name="authorLabel">
      <property name="geometry">
       <rect>
-       <x>250</x>
+       <x>255</x>
        <y>10</y>
        <width>111</width>
        <height>16</height>
@@ -313,9 +313,9 @@
      <property name="geometry">
       <rect>
        <x>50</x>
-       <y>420</y>
+       <y>470</y>
        <width>191</width>
-       <height>23</height>
+       <height>31</height>
       </rect>
      </property>
      <property name="cursor">
@@ -332,7 +332,7 @@
      <property name="geometry">
       <rect>
        <x>80</x>
-       <y>380</y>
+       <y>420</y>
        <width>131</width>
        <height>23</height>
       </rect>
@@ -347,12 +347,12 @@
       <string>regularButton</string>
      </property>
     </widget>
-    <widget class="QGroupBox" name="rgbrangeGroup">
+    <widget class="QGroupBox" name="settingsGroup">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>250</y>
-       <width>261</width>
+       <y>290</y>
+       <width>271</width>
        <height>121</height>
       </rect>
      </property>
@@ -368,7 +368,7 @@
      <property name="class" stdset="0">
       <string>group</string>
      </property>
-     <widget class="QLabel" name="nmrangeLabel">
+     <widget class="QLabel" name="luminanceLabel">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -384,7 +384,7 @@
        <string>regularText</string>
       </property>
      </widget>
-     <widget class="QLabel" name="mrangeLabel">
+     <widget class="QLabel" name="brightnessLabel">
       <property name="geometry">
        <rect>
         <x>10</x>
@@ -400,7 +400,7 @@
        <string>regularText</string>
       </property>
      </widget>
-     <widget class="QSpinBox" name="nmminBox">
+     <widget class="QSpinBox" name="lminBox">
       <property name="geometry">
        <rect>
         <x>150</x>
@@ -422,7 +422,7 @@
        <string>spinBox</string>
       </property>
      </widget>
-     <widget class="QLabel" name="nmrangeLabel_2">
+     <widget class="QLabel" name="minLabel">
       <property name="geometry">
        <rect>
         <x>160</x>
@@ -438,10 +438,10 @@
        <string>regularText</string>
       </property>
      </widget>
-     <widget class="QSpinBox" name="nmmaxBox">
+     <widget class="QSpinBox" name="lmaxBox">
       <property name="geometry">
        <rect>
-        <x>210</x>
+        <x>220</x>
         <y>45</y>
         <width>45</width>
         <height>22</height>
@@ -460,10 +460,10 @@
        <string>spinBox</string>
       </property>
      </widget>
-     <widget class="QLabel" name="nmrangeLabel_3">
+     <widget class="QLabel" name="maxLabel">
       <property name="geometry">
        <rect>
-        <x>220</x>
+        <x>230</x>
         <y>20</y>
         <width>31</width>
         <height>21</height>
@@ -476,7 +476,7 @@
        <string>regularText</string>
       </property>
      </widget>
-     <widget class="QSpinBox" name="mmaxBox">
+     <widget class="QSpinBox" name="blimitBox">
       <property name="geometry">
        <rect>
         <x>150</x>
@@ -498,10 +498,10 @@
        <string>spinBox</string>
       </property>
      </widget>
-     <widget class="QLabel" name="rgbinfoLink">
+     <widget class="QLabel" name="infoLink">
       <property name="geometry">
        <rect>
-        <x>250</x>
+        <x>260</x>
         <y>2</y>
         <width>16</width>
         <height>16</height>
@@ -519,8 +519,8 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>160</y>
-       <width>261</width>
+       <y>200</y>
+       <width>271</width>
        <height>81</height>
       </rect>
      </property>
@@ -539,7 +539,7 @@
      <widget class="QToolButton" name="setmetallicButton">
       <property name="geometry">
        <rect>
-        <x>230</x>
+        <x>240</x>
         <y>40</y>
         <width>25</width>
         <height>25</height>
@@ -563,7 +563,7 @@
        <rect>
         <x>50</x>
         <y>40</y>
-        <width>171</width>
+        <width>181</width>
         <height>25</height>
        </rect>
       </property>
@@ -622,8 +622,8 @@
       <rect>
        <x>10</x>
        <y>10</y>
-       <width>261</width>
-       <height>141</height>
+       <width>271</width>
+       <height>181</height>
       </rect>
      </property>
      <property name="title">
@@ -641,7 +641,7 @@
      <widget class="QToolButton" name="setalbedoButton">
       <property name="geometry">
        <rect>
-        <x>230</x>
+        <x>240</x>
         <y>40</y>
         <width>25</width>
         <height>25</height>
@@ -665,7 +665,7 @@
        <rect>
         <x>49</x>
         <y>40</y>
-        <width>171</width>
+        <width>181</width>
         <height>25</height>
        </rect>
       </property>
@@ -718,11 +718,11 @@
        <string>textureIcon</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="validateButton">
+     <widget class="QPushButton" name="verifyButton">
       <property name="geometry">
        <rect>
-        <x>180</x>
-        <y>110</y>
+        <x>190</x>
+        <y>150</y>
         <width>75</width>
         <height>23</height>
        </rect>
@@ -737,11 +737,11 @@
        <string>regularButton</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="clampButton">
+     <widget class="QPushButton" name="correctButton">
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>110</y>
+        <y>150</y>
         <width>75</width>
         <height>23</height>
        </rect>
@@ -760,7 +760,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>80</y>
+        <y>100</y>
         <width>261</width>
         <height>17</height>
        </rect>
@@ -779,6 +779,35 @@
       </property>
       <property name="class" stdset="0">
        <string>checkBox</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="coefficientLabel">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>120</y>
+        <width>181</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Compensation coefficient:</string>
+      </property>
+      <property name="class" stdset="0">
+       <string>regularText</string>
+      </property>
+     </widget>
+     <widget class="QDoubleSpinBox" name="coefficientBox">
+      <property name="geometry">
+       <rect>
+        <x>211</x>
+        <y>120</y>
+        <width>51</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="class" stdset="0">
+       <string>spinBox</string>
       </property>
      </widget>
     </widget>

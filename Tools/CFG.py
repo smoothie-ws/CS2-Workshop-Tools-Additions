@@ -5,23 +5,29 @@ class CFG:
     def __init__(self, file):
         self.file = file
         config = configparser.ConfigParser()
-        with open(self.file, 'r') as configfile:
-            config.read_file(configfile)
 
-        self.version = config.get('APPLICATION', 'version')
+        try:
+            with open(self.file, 'r') as configfile:
+                config.read_file(configfile)
 
-        self.finish_style = config.get('DEFAULTS', 'finish_style')
-        self.mode = config.get('DEFAULTS', 'mode')
-        self.is_saturation_considered = config.getboolean('DEFAULTS', 'is_saturation_considered')
-        self.saturation_value = config.getfloat('DEFAULTS', 'saturation_value')
-        self.is_compensating = config.getboolean('DEFAULTS', 'is_compensating')
-        self.compensation_coefficient = config.getfloat('DEFAULTS', 'compensation_coefficient')
-        self.nm_min = config.getint('DEFAULTS', 'nm_min')
-        self.nm_max = config.getint('DEFAULTS', 'nm_max')
-        self.m_min = config.getint('DEFAULTS', 'm_min')
-        self.m_max = config.getint('DEFAULTS', 'm_max')
-        self.mhs_min = config.getint('DEFAULTS', 'mhs_min')
-        self.mhs_max = config.getint('DEFAULTS', 'mhs_max')
+            self.version = config.get('APPLICATION', 'version')
+            self.finish_style = config.get('DEFAULTS', 'finish_style')
+            self.mode = config.get('DEFAULTS', 'mode')
+            self.is_compensating = config.getboolean('DEFAULTS', 'is_compensating')
+            self.compensation_coefficient = config.getfloat('DEFAULTS', 'compensation_coefficient')
+            self.l_min = config.getint('DEFAULTS', 'luminance_min')
+            self.l_max = config.getint('DEFAULTS', 'luminance_max')
+            self.b_limit = config.getint('DEFAULTS', 'brightness_limit')
+
+        except Exception:
+            self.version = "0.0"
+            self.finish_style = "Gunsmith"
+            self.mode = "combined"
+            self.is_compensating = True
+            self.compensation_coefficient = 1.1
+            self.l_min = 8
+            self.l_max = 235
+            self.b_limit = 70
 
     def write(self):
         config = configparser.ConfigParser()
@@ -29,16 +35,11 @@ class CFG:
         config['DEFAULTS'] = {
             'finish_style': self.finish_style,
             'mode': self.mode,
-            'is_saturation_considered': self.is_saturation_considered,
-            'saturation_value': self.saturation_value,
             'is_compensating': self.is_compensating,
             'compensation_coefficient': self.compensation_coefficient,
-            'nm_min': self.nm_min,
-            'nm_max': self.nm_max,
-            'm_min': self.m_min,
-            'm_max': self.m_max,
-            'mhs_min': self.mhs_min,
-            'mhs_max': self.mhs_max
+            'luminance_min': self.l_min,
+            'luminance_max': self.l_max,
+            'brightness_limit': self.b_limit,
         }
 
         config['APPLICATION'] = {
