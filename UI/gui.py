@@ -204,15 +204,17 @@ class GUI(QMainWindow):
         texture_input.setStyleSheet("border-color: #343434;")
         try:
             filepath = QFileDialog.getOpenFileName(self, 'Open File', 'C:/', 'Image (*.tga;*.png;*.jpg;*.jpeg;*.jp2;*.bmp)')
-            texture_input.setText(filepath[0])
-            self.set_icon(Image.open(filepath[0]), icon)
+
+            if filepath[0] != "":
+                texture_input.setText(filepath[0])
+                self.set_icon(Image.open(filepath[0]), icon)
 
             if is_set_image:
                 self.set_image(self.active_image_label, self.active_image_layout, 650, 650, Image.open(filepath[0]))
 
             self.status_label.setText("Albedo texture was loaded successfully")
         except Exception:
-            texture_input.setStyleSheet("border-color: #a03c3c;")
+            pass
 
     def correct_albedo(self):
         valid_inputs = True
