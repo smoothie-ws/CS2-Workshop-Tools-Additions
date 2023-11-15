@@ -1,5 +1,5 @@
 import os
-from PIL import Image, ImageChops, ImageEnhance
+from PIL import Image, ImageChops
 import numpy as np
 import numexpr as ne
 
@@ -12,25 +12,31 @@ def calculate_luminance(image_data):
     return np.dot(linear_rgb, [0.299, 0.587, 0.114])
 
 
-def clip_metallic(image):
+def clamp_metallic(image):
     img = image.convert("HSV")
-    v = img.split()[-1]
 
-    v_data = np.array(v, dtype=np.float32)
+    img_data = np.array(img, dtype=np.float32)
 
-    # ?
-    v_data = np.power(v_data, v_data / 70)
-    v_data = np.clip(v_data, 0, 255)
+    img_data[:, :, 2] = np.clip(np.power(img_data[:, :, 2], img_data[:, :, 2] / 70), 0, 255)
 
-    return ImageChops.multiply(image, Image.fromarray(v_data.astype('uint8')).convert('RGB'))
+    return ImageChops.multiply(image, Image.fromarray(img_data[:, :, 2].astype('uint8')).convert('RGB'))
+
+
+def unclamp_metallic(image):
+    img = image.convert("HSV")
+    img_data = np.array(img, dtype=np.float32)
+    v_data = (255 - img_data[:, :, 2]) / 3
+
+    return ImageChops.add(image, Image.fromarray(v_data.astype('uint8')).convert('RGB'))
 
 
 def correct_range(image_data):
     image_data = np.clip(image_data, 1, 255) / 255
-    linear_rgb = ne.evaluate('where(image_data <= 0.04045, image_data / 12.92, ((image_data + 0.055) / 1.055) ** 2.4) * 255')
+    linear_rgb = ne.evaluate(
+        'where(image_data <= 0.04045, image_data / 12.92, ((image_data + 0.055) / 1.055) ** 2.4) * 255')
 
     luminance_data = np.dot(linear_rgb, [0.299, 0.587, 0.114])
-    luminance_data_corrected = np.clip(luminance_data, 9, 235)
+    luminance_data_corrected = np.clip(luminance_data, 9.2, 225)
     luminance_lightening_factor = np.clip(luminance_data_corrected - luminance_data, 0, 255)
     luminance_darkening_factor = np.clip(luminance_data - luminance_data_corrected, 0, 255)
 
@@ -41,7 +47,8 @@ def correct_range(image_data):
     linear_rgb_corrected = np.clip(linear_rgb_lightened - luminance_darkening_factor[:, :, np.newaxis], 0, 255)
 
     linear_rgb_corrected /= 255
-    image_data = np.where(linear_rgb_corrected <= 0.0031308, linear_rgb_corrected * 12.92, (linear_rgb_corrected ** (1.0 / 2.4)) * 1.055 - 0.055) * 255
+    image_data = np.where(linear_rgb_corrected <= 0.0031308, linear_rgb_corrected * 12.92,
+                          (linear_rgb_corrected ** (1.0 / 2.4)) * 1.055 - 0.055) * 255
 
     return image_data
 
@@ -69,24 +76,18 @@ class PBRSet:
 
     def correct_albedo(self, mode, is_compensating=False):
         self.albedo_corrected = self.albedo_image.convert("RGB")
-        image_data = None
+        image_data = np.array(self.albedo_corrected, dtype=np.float32)
 
-        if mode == "nonmetallic":
-            image_data = np.array(self.albedo_corrected, dtype=np.float32)
+        corrected_data = correct_range(image_data)
+        self.albedo_corrected = Image.fromarray(corrected_data.astype('uint8'))
 
         if mode == "metallic":
-            image_data = np.array(clip_metallic(self.albedo_corrected), dtype=np.float32)
+            self.albedo_corrected = unclamp_metallic(self.albedo_corrected)
 
         if mode == "combined":
-            image_adjusted = clip_metallic(self.albedo_corrected)
+            albedo_metallic_corrected = unclamp_metallic(self.albedo_corrected)
             metallic_mask = self.metallic_image.split()[0]
-            albedo = self.albedo_image.convert("RGB")
-            albedo.paste(image_adjusted, (0, 0), metallic_mask)
-            image_data = np.array(albedo, dtype=np.float32)
-
-        if image_data is not None:
-            corrected_data = correct_range(image_data)
-            self.albedo_corrected = Image.fromarray(corrected_data.astype('uint8'))
+            self.albedo_corrected.paste(albedo_metallic_corrected, (0, 0), metallic_mask)
 
         if self.albedo_image.mode == 'RGBA':
             alpha = self.albedo_image.split()[-1]
@@ -114,10 +115,10 @@ class PBRSet:
             image_data = np.array(self.albedo_verified, dtype=np.float32)
 
         if mode == "metallic":
-            image_data = np.array(clip_metallic(self.albedo_verified), dtype=np.float32)
+            image_data = np.array(clamp_metallic(self.albedo_verified), dtype=np.float32)
 
         if mode == "combined":
-            image_adjusted = clip_metallic(self.albedo_verified)
+            image_adjusted = clamp_metallic(self.albedo_verified)
             metallic_mask = self.metallic_image.split()[0]
             albedo = self.albedo_image.convert("RGB")
             albedo.paste(image_adjusted, (0, 0), metallic_mask)
@@ -129,7 +130,6 @@ class PBRSet:
 
             mismatched_pixels = ((verified_data == [255, 0, 0]) | (verified_data == [0, 0, 255])).all(axis=2).sum()
             return mismatched_pixels
-
         else:
             return 0
 
