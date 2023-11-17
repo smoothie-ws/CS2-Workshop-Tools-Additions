@@ -126,7 +126,7 @@ class GUI(QMainWindow):
 
                 self.pbr_set.albedo_corrected = self.processing_thread.albedo_corrected
 
-                self.active_image = self.pbr_set.albedo_corrected
+                self.active_image = self.pbr_set.albedo_corrected.convert("RGB")
 
                 self.toggle_ao()
 
@@ -140,7 +140,7 @@ class GUI(QMainWindow):
 
                 self.pbr_set.albedo_verified = self.processing_thread.albedo_verified
 
-                self.active_image = self.pbr_set.albedo_verified
+                self.active_image = self.pbr_set.albedo_verified.convert("RGB")
 
                 self.toggle_ao()
 
@@ -282,11 +282,11 @@ class GUI(QMainWindow):
                 self.set_icon(Image.open(filepath[0]), icon)
 
             if is_set_image:
-                self.active_image = Image.open(filepath[0])
+                self.active_image = Image.open(filepath[0]).convert("RGB")
                 self.set_image(self.active_image_label, self.active_image_layout, 650, 650, Image.open(filepath[0]))
 
             if image_type == "ao":
-                self.ao_image = Image.open(filepath[0])
+                self.ao_image = Image.open(filepath[0]).convert("RGB")
 
             if image_type == "albedo":
                 self.albedo_image = Image.open(filepath[0])
@@ -426,7 +426,7 @@ class GUI(QMainWindow):
                 self.set_image(self.active_image_label, self.active_image_layout, 650, 650, self.active_image)
 
             elif self.active_image is not None:
-                self.set_image(self.active_image_label, self.active_image_layout, 650, 650, ImageChops.multiply(self.active_image.convert("RGB"), self.ao_image))
+                self.set_image(self.active_image_label, self.active_image_layout, 650, 650, ImageChops.multiply(self.active_image, self.ao_image.resize(self.active_image.size)))
             else:
                 self.set_image(self.active_image_label, self.active_image_layout, 650, 650, self.ao_image)
 
