@@ -24,7 +24,7 @@ class CFG:
             self.finish_style = "Gunsmith"
             self.mode = "combined"
             self.is_compensating = True
-            self.compensation_coefficient = 1.1
+            self.compensation_coefficient = 1.0
             self.l_min = 8
             self.l_max = 235
             self.b_limit = 70
