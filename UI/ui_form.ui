@@ -332,7 +332,7 @@
      <property name="geometry">
       <rect>
        <x>80</x>
-       <y>580</y>
+       <y>600</y>
        <width>131</width>
        <height>23</height>
       </rect>
@@ -351,13 +351,13 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>440</y>
+       <y>480</y>
        <width>271</width>
-       <height>121</height>
+       <height>111</height>
       </rect>
      </property>
      <property name="title">
-      <string>Advanced settings</string>
+      <string>Advansed settings</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignJustify|Qt::AlignVCenter</set>
@@ -388,7 +388,7 @@
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>85</y>
+        <y>80</y>
         <width>181</width>
         <height>21</height>
        </rect>
@@ -480,7 +480,7 @@
       <property name="geometry">
        <rect>
         <x>150</x>
-        <y>85</y>
+        <y>80</y>
         <width>51</width>
         <height>22</height>
        </rect>
@@ -519,7 +519,7 @@
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>240</y>
+       <y>140</y>
        <width>271</width>
        <height>81</height>
       </rect>
@@ -623,7 +623,7 @@
        <x>10</x>
        <y>10</y>
        <width>271</width>
-       <height>211</height>
+       <height>121</height>
       </rect>
      </property>
      <property name="title">
@@ -756,100 +756,18 @@
        <string>mainButton</string>
       </property>
      </widget>
-     <widget class="QDoubleSpinBox" name="coefficientBox">
-      <property name="geometry">
-       <rect>
-        <x>214</x>
-        <y>180</y>
-        <width>51</width>
-        <height>22</height>
-       </rect>
-      </property>
-      <property name="maximum">
-       <double>2.000000000000000</double>
-      </property>
-      <property name="singleStep">
-       <double>0.100000000000000</double>
-      </property>
-      <property name="value">
-       <double>1.000000000000000</double>
-      </property>
-      <property name="class" stdset="0">
-       <string>spinBox</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="coefficientLabel">
-      <property name="geometry">
-       <rect>
-        <x>9</x>
-        <y>180</y>
-        <width>181</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Coefficient:</string>
-      </property>
-      <property name="class" stdset="0">
-       <string>regularText</string>
-      </property>
-     </widget>
-     <widget class="QCheckBox" name="iscompensatingBox">
-      <property name="geometry">
-       <rect>
-        <x>9</x>
-        <y>155</y>
-        <width>261</width>
-        <height>17</height>
-       </rect>
-      </property>
-      <property name="cursor">
-       <cursorShape>PointingHandCursor</cursorShape>
-      </property>
-      <property name="layoutDirection">
-       <enum>Qt::LeftToRight</enum>
-      </property>
-      <property name="text">
-       <string>Compensate for luminance clamp</string>
-      </property>
-      <property name="checked">
-       <bool>true</bool>
-      </property>
-      <property name="class" stdset="0">
-       <string>checkBox</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="experimentalLabel">
-      <property name="geometry">
-       <rect>
-        <x>40</x>
-        <y>130</y>
-        <width>191</width>
-        <height>21</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>(Experimental)</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-      <property name="class" stdset="0">
-       <string>regularText</string>
-      </property>
-     </widget>
     </widget>
     <widget class="QGroupBox" name="aoGroup">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>340</y>
+       <y>390</y>
        <width>271</width>
        <height>81</height>
       </rect>
      </property>
      <property name="title">
-      <string>AO map</string>
+      <string>Ambient Occlusion</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignJustify|Qt::AlignVCenter</set>
@@ -963,6 +881,190 @@
       </property>
       <property name="class" stdset="0">
        <string>checkBox</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QGroupBox" name="roughnessGroup">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>230</y>
+       <width>271</width>
+       <height>151</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string>Roughness Texture</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignJustify|Qt::AlignVCenter</set>
+     </property>
+     <property name="checkable">
+      <bool>false</bool>
+     </property>
+     <property name="class" stdset="0">
+      <string>group</string>
+     </property>
+     <widget class="QToolButton" name="setroughnessButton">
+      <property name="geometry">
+       <rect>
+        <x>240</x>
+        <y>40</y>
+        <width>25</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::StrongFocus</enum>
+      </property>
+      <property name="text">
+       <string>...</string>
+      </property>
+      <property name="class" stdset="0">
+       <string>regularButton</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="roughnessPathInput">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>40</y>
+        <width>181</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="placeholderText">
+       <string>Filepath</string>
+      </property>
+      <property name="class" stdset="0">
+       <string>textInput</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="roughnessIcon">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>35</y>
+        <width>35</width>
+        <height>35</height>
+       </rect>
+      </property>
+      <property name="cursor">
+       <cursorShape>ArrowCursor</cursorShape>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
+      <property name="inputMethodHints">
+       <set>Qt::ImhHiddenText</set>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+      <property name="icon">
+       <iconset>
+        <normaloff>icons/emptyimage_icon.png</normaloff>
+        <disabledoff>icons/emptyimage_disabled_icon.png</disabledoff>icons/emptyimage_icon.png</iconset>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>35</width>
+        <height>35</height>
+       </size>
+      </property>
+      <property name="checked">
+       <bool>false</bool>
+      </property>
+      <property name="flat">
+       <bool>false</bool>
+      </property>
+      <property name="class" stdset="0">
+       <string>textureIcon</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="experimentalLabel">
+      <property name="geometry">
+       <rect>
+        <x>40</x>
+        <y>75</y>
+        <width>191</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>(Experimental)</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+      <property name="class" stdset="0">
+       <string>regularText</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="iscompensatingBox">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>100</y>
+        <width>261</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="text">
+       <string>Compensate for luminance clamp</string>
+      </property>
+      <property name="checked">
+       <bool>true</bool>
+      </property>
+      <property name="class" stdset="0">
+       <string>checkBox</string>
+      </property>
+     </widget>
+     <widget class="QDoubleSpinBox" name="coefficientBox">
+      <property name="geometry">
+       <rect>
+        <x>215</x>
+        <y>120</y>
+        <width>51</width>
+        <height>22</height>
+       </rect>
+      </property>
+      <property name="maximum">
+       <double>2.000000000000000</double>
+      </property>
+      <property name="singleStep">
+       <double>0.100000000000000</double>
+      </property>
+      <property name="value">
+       <double>1.000000000000000</double>
+      </property>
+      <property name="class" stdset="0">
+       <string>spinBox</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="coefficientLabel">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>120</y>
+        <width>181</width>
+        <height>21</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Coefficient:</string>
+      </property>
+      <property name="class" stdset="0">
+       <string>regularText</string>
       </property>
      </widget>
     </widget>

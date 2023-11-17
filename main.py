@@ -10,7 +10,7 @@ from PyQt6.QtGui import QFontDatabase
 from PyQt6.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel
 import sys
 
-from UI.gui import GUI
+from modules.GUI import GUI
 
 
 class UpdateThread(QThread):
@@ -136,7 +136,7 @@ if __name__ == "__main__":
         latest_version = data['tag_name']
 
         try:
-            from Tools.CFG import CFG
+            from modules.Config import CFG
 
             cfg = CFG("config.cfg")
             current_version = cfg.version
