@@ -1,6 +1,6 @@
 from PIL import Image, ImageChops, ImageEnhance
 import numpy as np
-from .ImageProcessing import clamp_brightness, unclamp_brightness, correct_range, verify_range
+from .DataProcessing import clamp_brightness, unclamp_brightness, correct_range, verify_range
 
 
 class TextureSet:
